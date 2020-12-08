@@ -19,11 +19,11 @@ class CreateUsersTable extends Migration
             $table->foreignId('user_role_id')->references('id')->on('user_roles');
             $table->foreignId('school_id')->references('id')->on('schools');
             $table->string('name');
-            $table->string('class_name');
+            $table->string('class_name')->nullable();
             $table->string('email');
-            $table->timestamp('verified_at');
+            $table->timestamp('verified_at')->nullable();
             $table->string('password');
-            $table->string('remember_token', 100);
+            $table->string('remember_token', 100)->nullable();
             $table->timestamps();
         });
     }
