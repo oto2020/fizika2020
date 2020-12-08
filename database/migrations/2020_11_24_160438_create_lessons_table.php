@@ -14,7 +14,7 @@ class CreateLessonsTable extends Migration
     public function up()
     {
         Schema::create('lessons', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id')->unsigned();
             $table->string('full_url');
             $table->string('name');
             $table->string('user');

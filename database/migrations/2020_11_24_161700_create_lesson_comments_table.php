@@ -14,7 +14,7 @@ class CreateLessonCommentsTable extends Migration
     public function up()
     {
         Schema::create('lesson_comments', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id')->unsigned();
             $table->foreignId('user_id')->references('id')->on('users');
             $table->foreignId('lesson_id')->references('id')->on('lessons');
             $table->string('content');
