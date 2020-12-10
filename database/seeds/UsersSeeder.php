@@ -18,7 +18,7 @@ class UsersSeeder extends Seeder
             DB::table('users')->insert([
                 'id' => 1,
                 'name' => 'Конюхова Антонина Евгеньевна',
-                'avatar_src' => '/storage/img/AVATAR_ZAYAC.png',
+//                'avatar_src' => '/storage/img/AVATAR_ZAYAC.png',
                 'user_role_id' => 1,  // admin
                 'school_id' => 1, // base
                 'class_name' => null,
@@ -38,7 +38,7 @@ class UsersSeeder extends Seeder
             DB::table('users')->insert([
                 'id' => 2,
                 'name' => 'Блыщик Владимир Фёдорович',
-                'avatar_src' => '/storage/img/AVATAR_ZAYAC.png',
+//                'avatar_src' => '/storage/img/AVATAR_ZAYAC.png',
                 'user_role_id' => 1,  // admin
                 'school_id' => 1, // base
                 'class_name' => null,
