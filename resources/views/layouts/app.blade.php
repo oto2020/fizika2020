@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
@@ -7,74 +7,72 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <!-- Title -->
+    <title>
+        @if(isset($title))
+            {{ $title }}
+        @else
+            Обучающий портал по физике
+        @endif
+    </title>
 
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
+    <!-- Icon -->
+    <link rel="icon" href="/storage/img/main/favicon.ico" type="image/x-icon">
 
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
-    <!-- Styles -->
+{{--    <!-- Fonts -->--}}
+{{--    <link rel="dns-prefetch" href="//fonts.gstatic.com">--}}
+{{--    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">--}}
+
+<!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+{{--    <link href="{{ asset('/css/bootstrap.css') }}" rel="stylesheet">--}}
+{{--    <link href="{{ asset('/css/main.css')}}" rel="stylesheet" type="text/css">--}}
+
+<!-- Katex -->
+    {{--    <link href="/katex/katex.css" rel="stylesheet" type="text/css"/>--}}
+    {{--    <script src="/katex/katex.js" type="text/javascript"></script>--}}
+
+    {{--    <script>--}}
+    {{--        // при загрузке изображения со стороннего ресурса -- включается в работу katex. Нужно лишь навесить событие и в качестве обработчика указать этот метод--}}
+    {{--        function onLoadLatexImg(img) {--}}
+    {{--            // формируем динамически новый div--}}
+    {{--            var newDiv = document.createElement('div');--}}
+    {{--            // katex берет latex-код из img.alt и формирует наш новый div--}}
+    {{--            katex.render(img.alt, newDiv);--}}
+    {{--            // заменим img на div--}}
+    {{--            img.parentElement.replaceChild(newDiv, img);--}}
+    {{--        }--}}
+    {{--    </script>--}}
 </head>
+
+
 <body>
-    <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
+<div class="wrapper">
+    <div class="container" id="app">
+        @include('layouts.messages.message')
+        <br>
+        <!--ВЕРХНЕЕ МЕНЮ!-->
+        {{--        @include('layouts.top.menu')--}}
 
-                    </ul>
-
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ml-auto">
-                        <!-- Authentication Links -->
-                        @guest
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                            </li>
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                        @endguest
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
-        <main class="py-4">
+        <top_menu
+            :user='@json(isset($user)?$user:null)'
+            :role='@json(isset($role)?$role:null)'
+        ></top_menu>
+        <main>
             @yield('content')
         </main>
+
+
     </div>
+    <div class="push"></div>
+</div>
+
+<div class="footer">КФУ им. В.И. Вернадского, Симферополь, 2020</div>
+<!-- Scripts -->
+<script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>
+
+
