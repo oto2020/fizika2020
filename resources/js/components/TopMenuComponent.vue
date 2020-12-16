@@ -10,39 +10,40 @@
                 </li>
             </ul>
 
+            <!--ЕСЛИ ВОЙДЕНО-->
             <ul v-if="this.user!==null" class="navbar-nav ml-auto">
-                <div>
+                <div class="row">
 
-                    <table>
-                        <tr>
-                            <!--АВА ПОЛЬЗОВАТЕЛЯ-->
-                            <td id="user_ava_block">
-                                <img :src="this.user.avatar_src" class="img-user-avatar-on-top-menu" alt="">
-                            </td>
-                            <!--ИМЯ ПОЛЬЗОВАТЕЛЯ + РОЛЬ-->
-                            <td id="user_block">
-                                <div class="text-white">
-                                    <h5> {{this.user.name}} </h5>
-                                    <h6> {{this.role.name}} </h6>
-                                </div>
-                            </td>
-                            <!--КНОПКА ВЫХОД-->
-                            <td>
-                                <a href="/logout" onclick="return confirm ('Точно выйти?')">
-                                    <img :src="'/storage/img/main/exit_button.png'" class="button-exit-on-top-menu"
-                                         alt="">
-                                </a>
-                            </td>
-                        </tr>
-                    </table>
+                    <!--АВА ПОЛЬЗОВАТЕЛЯ-->
+                    <div v-on:mouseenter="userMouseEnter" v-on:mouseleave="userMouseLeave" class="col-auto" >
+                        <img :src="this.user.avatar_src" class="img-user-avatar-on-top-menu" alt="Аватар">
+                    </div>
+
+                    <!--ИМЯ ПОЛЬЗОВАТЕЛЯ + РОЛЬ-->
+                    <div id="userInfo" class="col-auto text-white">
+                        <h5> {{this.user.name}} </h5>
+                        <h6> {{this.role.name}} </h6>
+                    </div>
+
+                    <!--КНОПКА ВЫХОД-->
+                    <div class="col-auto">
+                        <a href="/logout" onclick="return confirm ('Точно выйти?')">
+                            <img :src="'/storage/img/main/exit_button.png'" class="button-exit-on-top-menu" alt="Выход">
+                        </a>
+                    </div>
                 </div>
             </ul>
-            <ul v-else class="navbar-nav mr-auto">
-                <div class="text-white">
-                    <li class="nav-item">Регистрация</li>
-                    <li class="nav-item">Вход</li>
+
+            <!--ЕСЛИ НЕ ВОЙДЕНО-->
+            <div v-else class="row">
+                <div class="col-auto p-0">
+                    <a v-bind:href=this.registerRoute class="btn btn-secondary"> Регистрация </a>
                 </div>
-            </ul>
+                <div class="col-auto">
+                    <a v-bind:href=this.loginRoute class="btn btn-secondary"> Вход </a>
+                </div>
+            </div>
+
         </nav>
     </div>
 
@@ -51,8 +52,16 @@
 
 <script>
     export default {
-        props: ['user', 'role', 'message'],
-
+        props: ['user', 'role', 'registerRoute', 'loginRoute'],
+        methods: {
+            userMouseEnter() {
+                console.log(this);
+                this.style.cursor ='innerhit';
+            },
+            userMouseLeave() {
+                this.style.cursor ='';
+            },
+        },
 
         mounted() {
             console.log('Top Menu mounted.')

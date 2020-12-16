@@ -1992,8 +1992,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['user', 'role', 'message'],
+  props: ['user', 'role', 'registerRoute', 'loginRoute'],
+  methods: {
+    userMouseEnter: function userMouseEnter() {
+      console.log(this);
+      this.style.cursor = 'innerhit';
+    },
+    userMouseLeave: function userMouseLeave() {
+      this.style.cursor = '';
+    }
+  },
   mounted: function mounted() {
     console.log('Top Menu mounted.');
   }
@@ -37647,49 +37657,82 @@ var render = function() {
         _vm._v(" "),
         this.user !== null
           ? _c("ul", { staticClass: "navbar-nav ml-auto" }, [
-              _c("div", [
-                _c("table", [
-                  _c("tr", [
-                    _c("td", { attrs: { id: "user_ava_block" } }, [
+              _c("div", { staticClass: "row" }, [
+                _c(
+                  "div",
+                  {
+                    staticClass: "col-auto",
+                    on: {
+                      mouseenter: _vm.userMouseEnter,
+                      mouseleave: _vm.userMouseLeave
+                    }
+                  },
+                  [
+                    _c("img", {
+                      staticClass: "img-user-avatar-on-top-menu",
+                      attrs: { src: this.user.avatar_src, alt: "Аватар" }
+                    })
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "col-auto text-white",
+                    attrs: { id: "userInfo" }
+                  },
+                  [
+                    _c("h5", [_vm._v(" " + _vm._s(this.user.name) + " ")]),
+                    _vm._v(" "),
+                    _c("h6", [_vm._v(" " + _vm._s(this.role.name) + " ")])
+                  ]
+                ),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-auto" }, [
+                  _c(
+                    "a",
+                    {
+                      attrs: {
+                        href: "/logout",
+                        onclick: "return confirm ('Точно выйти?')"
+                      }
+                    },
+                    [
                       _c("img", {
-                        staticClass: "img-user-avatar-on-top-menu",
-                        attrs: { src: this.user.avatar_src, alt: "" }
+                        staticClass: "button-exit-on-top-menu",
+                        attrs: {
+                          src: "/storage/img/main/exit_button.png",
+                          alt: "Выход"
+                        }
                       })
-                    ]),
-                    _vm._v(" "),
-                    _c("td", { attrs: { id: "user_block" } }, [
-                      _c("div", { staticClass: "text-white" }, [
-                        _c("h5", [_vm._v(" " + _vm._s(this.user.name) + " ")]),
-                        _vm._v(" "),
-                        _c("h6", [_vm._v(" " + _vm._s(this.role.name) + " ")])
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("td", [
-                      _c(
-                        "a",
-                        {
-                          attrs: {
-                            href: "/logout",
-                            onclick: "return confirm ('Точно выйти?')"
-                          }
-                        },
-                        [
-                          _c("img", {
-                            staticClass: "button-exit-on-top-menu",
-                            attrs: {
-                              src: "/storage/img/main/exit_button.png",
-                              alt: ""
-                            }
-                          })
-                        ]
-                      )
-                    ])
-                  ])
+                    ]
+                  )
                 ])
               ])
             ])
-          : _c("ul", { staticClass: "navbar-nav mr-auto" }, [_vm._m(1)])
+          : _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-auto p-0" }, [
+                _c(
+                  "a",
+                  {
+                    staticClass: "btn btn-secondary",
+                    attrs: { href: this.registerRoute }
+                  },
+                  [_vm._v(" Регистрация ")]
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-auto" }, [
+                _c(
+                  "a",
+                  {
+                    staticClass: "btn btn-secondary",
+                    attrs: { href: this.loginRoute }
+                  },
+                  [_vm._v(" Вход ")]
+                )
+              ])
+            ])
       ]
     )
   ])
@@ -37705,16 +37748,6 @@ var staticRenderFns = [
           _vm._v("Главная")
         ])
       ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "text-white" }, [
-      _c("li", { staticClass: "nav-item" }, [_vm._v("Регистрация")]),
-      _vm._v(" "),
-      _c("li", { staticClass: "nav-item" }, [_vm._v("Вход")])
     ])
   }
 ]

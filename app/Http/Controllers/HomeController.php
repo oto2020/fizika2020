@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Section;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,6 +26,7 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $errors = [];
         try {
             $user = Auth::user();
             $role = User::getRole($user);
@@ -33,6 +35,12 @@ class HomeController extends Controller
             $user = null;
             $role = null;
         }
-        return view('home', compact('user', 'role'));
+        try {
+            $sections = Section::getAllSections();
+        }
+        catch (\Exception $e) {
+            $sections = null;
+        }
+        return view('home', compact('user', 'role', 'sections'));
     }
 }

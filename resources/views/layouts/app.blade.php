@@ -57,8 +57,11 @@
         {{--        @include('layouts.top.menu')--}}
 
         <top_menu
+            :sections='@json(isset($sections)?$sections:null)'
             :user='@json(isset($user)?$user:null)'
             :role='@json(isset($role)?$role:null)'
+            login-route="{{route('login')}}"
+            register-route="{{route('register')}}"
         ></top_menu>
         <main>
             @yield('content')

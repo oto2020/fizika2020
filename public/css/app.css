@@ -10963,14 +10963,11 @@ body {
   height: 50px;
   width: 50px;
   border-radius: 30px;
-  margin-right: 10px;
 }
 
 .button-exit-on-top-menu {
   height: 50px;
   width: 50px;
-  margin-right: -10px;
-  margin-left: 5px;
 }
 
 .top-navbar {
