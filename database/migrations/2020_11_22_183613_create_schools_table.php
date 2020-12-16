@@ -16,7 +16,7 @@ class CreateSchoolsTable extends Migration
         Schema::create('schools', function (Blueprint $table) {
             $table->bigIncrements('id')->unsigned();
             $table->string('name');
-            $table->string('url');
+            $table->string('uri');
             $table->string('full_name');
             $table->string('geo_address');
             $table->timestamps();

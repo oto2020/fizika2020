@@ -6,6 +6,7 @@ use App\Section;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class HomeController extends Controller
 {
@@ -32,15 +33,22 @@ class HomeController extends Controller
             $role = User::getRole($user);
         }
         catch (\Exception $e) {
+            $errors[]= $e->getMessage();
             $user = null;
             $role = null;
         }
+
         try {
             $sections = Section::getAllSections();
         }
         catch (\Exception $e) {
+            $errors[]= $e->getMessage();
             $sections = null;
         }
+
+        // Сохраняем ошибки в сессию
+        Session::put('session_errors', $errors);
+
         return view('home', compact('user', 'role', 'sections'));
     }
 }

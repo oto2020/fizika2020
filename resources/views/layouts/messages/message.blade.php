@@ -18,8 +18,9 @@
                 </p>
         @endforeach
     @endif
-    @if(Session::has('errors'))
-        @foreach (Session::get('errors') as $error)
+
+    @if(Session::has('session_errors'))
+        @foreach (Session::get('session_errors') as $error)
             <p class="alert alert-danger" style="color: black; margin-bottom: 1px">
                 {{$error}}
             </p>

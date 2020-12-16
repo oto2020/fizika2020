@@ -2,20 +2,24 @@
     <!--require sections, section !-->
 
     <!-- Десктопная версия !-->
-    <div>
+    <div v-if="!isMobile">
         <nav class="top-navbar navbar navbar-expand-lg navbar-dark bg-dark">
+            <!--СПИСОК ССЫЛОК В ВЕРХНРЕМ МЕНЮ-->
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
                     <a class="nav-link" href="/main">Главная</a>
                 </li>
+                <li v-for="section in this.sections" class="nav-item">
+                    <a class="nav-link" v-bind:href=section.url>{{section.name}}</a>
+                </li>
             </ul>
 
             <!--ЕСЛИ ВОЙДЕНО-->
-            <ul v-if="this.user!==null" class="navbar-nav ml-auto">
-                <div class="row">
+            <ul v-if="isAuth" class="navbar-nav ml-auto">
+                <div class="row p-0">
 
                     <!--АВА ПОЛЬЗОВАТЕЛЯ-->
-                    <div v-on:mouseenter="userMouseEnter" v-on:mouseleave="userMouseLeave" class="col-auto" >
+                    <div v-on:mouseenter="userMouseEnter" v-on:mouseleave="userMouseLeave" class="col-auto">
                         <img :src="this.user.avatar_src" class="img-user-avatar-on-top-menu" alt="Аватар">
                     </div>
 
@@ -43,8 +47,44 @@
                     <a v-bind:href=this.loginRoute class="btn btn-secondary"> Вход </a>
                 </div>
             </div>
-
         </nav>
+    </div>
+    <!--Мобильная версия-->
+    <div v-else>
+        <div>
+            <!-- /|\ КНОПКА /|\ АВАТАР /|\ ВЫХОД /|\ -->
+            <div class="row top-navbar navbar navbar-expand-lg navbar-dark bg-dark">
+                <!-- КНОПКА МЕНЮ -->
+                <div v-on:click="isVisibleList=!isVisibleList" class="col">
+                    <img class="float-left img-user-avatar-on-top-menu" src="/storage/img/main/menu_button.png">
+                </div>
+                <!-- АВАТАР ПОЛЬЗОВАТЕЛЯ !-->
+                <div v-if="isAuth" class="col text-center">
+                    <a href="/cabinet">
+                        <img :src="this.user.avatar_src" class="img-user-avatar-on-top-menu" alt="Аватар">
+                    </a>
+                </div>
+                <!-- ВЫХОД -->
+                <div v-if="isAuth" class="col">
+                    <a class="float-right" href="/logout" onclick="return confirm ('Точно выйти?')">
+                        <img :src="'/storage/img/main/exit_button.png'" class="button-exit-on-top-menu" alt="Выход">
+                    </a>
+                </div>
+            </div>
+            <!-- СПИСОК В ВЕРХНЕМ МЕНЮ -->
+            <div v-show="isVisibleList" class="row top-navbar navbar navbar-expand-lg navbar-dark bg-dark">
+                <ul class="navbar-nav mr-auto pl-3">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/main">Главная</a>
+                    </li>
+                    <li v-for="section in this.sections" class="nav-item">
+                        <a class="nav-link" v-bind:href=section.url>{{section.name}}</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+
     </div>
 
 
@@ -52,19 +92,29 @@
 
 <script>
     export default {
-        props: ['user', 'role', 'registerRoute', 'loginRoute'],
+        props: ['sections', 'user', 'role', 'registerRoute', 'loginRoute'],
+        data: function () {
+            return {
+                isAuth: !(this.user === null),
+                isMobile: this.$isMobile(),
+                // будет ли список отображаться
+                isVisibleList: false,
+            }
+        },
         methods: {
             userMouseEnter() {
-                console.log(this);
-                this.style.cursor ='innerhit';
+                //console.log(this);
+                //this.style.cursor = 'innerhit';
             },
             userMouseLeave() {
-                this.style.cursor ='';
+                //this.style.cursor = '';
             },
         },
 
         mounted() {
-            console.log('Top Menu mounted.')
+            console.log('Top Menu mounted.');
+            console.log('isAuth: ' + this.isAuth);
+            console.log('isMobile: ' + this.isMobile);
         }
     }
 </script>

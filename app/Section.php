@@ -11,11 +11,11 @@ class Section extends Model
     {
         try {
             $sections = DB::table('sections')
-                ->select('id', 'name', 'url', 'ico')
+                ->select('id', 'name', 'url')
                 ->orderBy('id', 'asc')
                 ->get();
         } catch (\Exception $e) {
-            Throw new \Exception('Ошибка при получении разделов сайта.' . PHP_EOL . $e->getMessage());
+            Throw new \Exception('Ошибка при получении разделов сайта');// . PHP_EOL . $e->getMessage());
         }
         return $sections;
     }

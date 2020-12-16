@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class SchoolsSeeder extends Seeder
 {
@@ -15,7 +16,7 @@ class SchoolsSeeder extends Seeder
             DB::table('schools')->insert([
                 'id' => 1,
                 'name' => 'Базовая школа',
-                'url' => 'base',
+                'uri' => 'base',
                 'full_name' => 'Базовая школа. Содержащая базовый курс физики, от которого наследуются остальные школы.',
                 'geo_address' => 'г. Симферополь, проспект Вернадского, 4',
                 'created_at' => now(),
