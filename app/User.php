@@ -17,7 +17,7 @@ class User extends Authenticatable
                 ->where('id', '=', $user->user_role_id)
                 ->get()[0];
         } catch (\Exception $e) {
-            Throw new \Exception('Ошибка при определении роли пользователя.');// . PHP_EOL . $e->getMessage());
+            Throw new \Exception('Ошибка при определении роли пользователя' . (request('dev') ? PHP_EOL . $e->getMessage() : ''));
         }
         return $role;
     }
