@@ -58,10 +58,12 @@
 
         <top_menu
             :sections='@json(isset($sections)?$sections:null)'
+            :school='@json(isset($school)?$school:null)'
             :user='@json(isset($user)?$user:null)'
             :role='@json(isset($role)?$role:null)'
             login-route="{{route('login')}}"
             register-route="{{route('register')}}"
+            logout-route="{{route('logout')}}"
         ></top_menu>
         <main>
             @yield('content')

@@ -1,16 +1,14 @@
 <template>
-    <!--require sections, section !-->
-
     <!-- Десктопная версия !-->
     <div v-if="!isMobile">
         <nav class="top-navbar navbar navbar-expand-lg navbar-dark bg-dark">
             <!--СПИСОК ССЫЛОК В ВЕРХНРЕМ МЕНЮ-->
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="/main">Главная</a>
+                    <a class="nav-link" href="/home">Главная</a>
                 </li>
                 <li v-for="section in this.sections" class="nav-item">
-                    <a class="nav-link" v-bind:href=section.url>{{section.name}}</a>
+                    <a class="nav-link" v-bind:href="section.uri">{{section.name}}</a>
                 </li>
             </ul>
 
@@ -20,19 +18,19 @@
 
                     <!--АВА ПОЛЬЗОВАТЕЛЯ-->
                     <div v-on:mouseenter="userMouseEnter" v-on:mouseleave="userMouseLeave" class="col-auto">
-                        <img :src="this.user.avatar_src" class="img-user-avatar-on-top-menu" alt="Аватар">
+                        <img v-bind:src="this.user.avatar_src" class="img-user-avatar-on-top-menu" alt="Аватар">
                     </div>
 
                     <!--ИМЯ ПОЛЬЗОВАТЕЛЯ + РОЛЬ-->
-                    <div id="userInfo" class="col-auto text-white">
+                    <div v-on:mouseenter="userMouseEnter" v-on:mouseleave="userMouseLeave" class="col-auto text-white pl-0">
                         <h5> {{this.user.name}} </h5>
-                        <h6> {{this.role.name}} </h6>
+                        <h6 v-html="underText"></h6>
                     </div>
 
                     <!--КНОПКА ВЫХОД-->
-                    <div class="col-auto">
-                        <a href="/logout" onclick="return confirm ('Точно выйти?')">
-                            <img :src="'/storage/img/main/exit_button.png'" class="button-exit-on-top-menu" alt="Выход">
+                    <div v-on:mouseenter="logoutMouseEnter" v-on:mouseleave="logoutMouseLeave" class="col-auto">
+                        <a v-bind:href="this.logoutRoute" onclick="return confirm ('Точно выйти?')">
+                            <img v-bind:src="logoutButtonSrc" class="button-exit-on-top-menu" alt="Выход">
                         </a>
                     </div>
                 </div>
@@ -61,13 +59,13 @@
                 <!-- АВАТАР ПОЛЬЗОВАТЕЛЯ !-->
                 <div v-if="isAuth" class="col text-center">
                     <a href="/cabinet">
-                        <img :src="this.user.avatar_src" class="img-user-avatar-on-top-menu" alt="Аватар">
+                        <img v-bind:src="this.user.avatar_src" class="img-user-avatar-on-top-menu" alt="Аватар">
                     </a>
                 </div>
                 <!-- ВЫХОД -->
                 <div v-if="isAuth" class="col">
                     <a class="float-right" href="/logout" onclick="return confirm ('Точно выйти?')">
-                        <img :src="'/storage/img/main/exit_button.png'" class="button-exit-on-top-menu" alt="Выход">
+                        <img v-bind:src="logoutButtonSrc" class="button-exit-on-top-menu" alt="Выход">
                     </a>
                 </div>
             </div>
@@ -78,7 +76,7 @@
                         <a class="nav-link" href="/main">Главная</a>
                     </li>
                     <li v-for="section in this.sections" class="nav-item">
-                        <a class="nav-link" v-bind:href=section.url>{{section.name}}</a>
+                        <a class="nav-link" v-bind:href=section.uri>{{section.name}}</a>
                     </li>
                 </ul>
             </div>
@@ -92,22 +90,34 @@
 
 <script>
     export default {
-        props: ['sections', 'user', 'role', 'registerRoute', 'loginRoute'],
+        props: ['sections', 'user', 'role', 'school', 'registerRoute', 'loginRoute', 'logoutRoute'],
         data: function () {
             return {
                 isAuth: !(this.user === null),
                 isMobile: this.$isMobile(),
-                // будет ли список отображаться
+                // текст под Именем пользователя (будет изменяться на "Личный кабинет" при наведении)
+                underText: '[' + ((this.role)?this.role.name:'') + ']',
+                // путь к изображению кнопки выхода
+                logoutButtonSrc: '/storage/img/main/exit_button.png',
+                // будет ли список отображаться (в мобильной версии)
                 isVisibleList: false,
             }
         },
         methods: {
-            userMouseEnter() {
-                //console.log(this);
-                //this.style.cursor = 'innerhit';
+            userMouseEnter(event) {
+                event.target.style.cursor = 'pointer';
+                this.underText = '&#9733; [личный кабинет]';
             },
-            userMouseLeave() {
-                //this.style.cursor = '';
+            userMouseLeave(event) {
+                event.target.style.cursor = 'default';
+                this.underText = '[' + this.role.name + ']';
+            },
+
+            logoutMouseEnter() {
+                this.logoutButtonSrc= '/storage/img/main/exit_button_action.png';
+            },
+            logoutMouseLeave() {
+                this.logoutButtonSrc= '/storage/img/main/exit_button.png';
             },
         },
 

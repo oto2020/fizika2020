@@ -5,21 +5,17 @@ namespace App;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * @method static find(int $int)
+ */
 class User extends Authenticatable
 {
-    public static function getRole($user)
-    {
-        try {
-            $role = DB::table('user_roles')
-                ->select('id', 'name', 'level', 'description')
-                ->where('id', '=', $user->user_role_id)
-                ->get()[0];
-        } catch (\Exception $e) {
-            Throw new \Exception('Ошибка при определении роли пользователя' . (request('dev') ? PHP_EOL . $e->getMessage() : ''));
-        }
-        return $role;
+
+    public static function get() {
+        return Auth::user();
     }
 
     use Notifiable;

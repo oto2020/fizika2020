@@ -2031,23 +2031,34 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['sections', 'user', 'role', 'registerRoute', 'loginRoute'],
+  props: ['sections', 'user', 'role', 'school', 'registerRoute', 'loginRoute', 'logoutRoute'],
   data: function data() {
     return {
       isAuth: !(this.user === null),
       isMobile: this.$isMobile(),
-      // будет ли список отображаться
+      // текст под Именем пользователя (будет изменяться на "Личный кабинет" при наведении)
+      underText: '[' + (this.role ? this.role.name : '') + ']',
+      // путь к изображению кнопки выхода
+      logoutButtonSrc: '/storage/img/main/exit_button.png',
+      // будет ли список отображаться (в мобильной версии)
       isVisibleList: false
     };
   },
   methods: {
-    userMouseEnter: function userMouseEnter() {//console.log(this);
-      //this.style.cursor = 'innerhit';
+    userMouseEnter: function userMouseEnter(event) {
+      event.target.style.cursor = 'pointer';
+      this.underText = '&#9733; [личный кабинет]';
     },
-    userMouseLeave: function userMouseLeave() {//this.style.cursor = '';
+    userMouseLeave: function userMouseLeave(event) {
+      event.target.style.cursor = 'default';
+      this.underText = '[' + this.role.name + ']';
+    },
+    logoutMouseEnter: function logoutMouseEnter() {
+      this.logoutButtonSrc = '/storage/img/main/exit_button_action.png';
+    },
+    logoutMouseLeave: function logoutMouseLeave() {
+      this.logoutButtonSrc = '/storage/img/main/exit_button.png';
     }
   },
   mounted: function mounted() {
@@ -37715,7 +37726,7 @@ var render = function() {
                   return _c("li", { staticClass: "nav-item" }, [
                     _c(
                       "a",
-                      { staticClass: "nav-link", attrs: { href: section.url } },
+                      { staticClass: "nav-link", attrs: { href: section.uri } },
                       [_vm._v(_vm._s(section.name))]
                     )
                   ])
@@ -37747,36 +37758,48 @@ var render = function() {
                     _c(
                       "div",
                       {
-                        staticClass: "col-auto text-white",
-                        attrs: { id: "userInfo" }
+                        staticClass: "col-auto text-white pl-0",
+                        on: {
+                          mouseenter: _vm.userMouseEnter,
+                          mouseleave: _vm.userMouseLeave
+                        }
                       },
                       [
                         _c("h5", [_vm._v(" " + _vm._s(this.user.name) + " ")]),
                         _vm._v(" "),
-                        _c("h6", [_vm._v(" " + _vm._s(this.role.name) + " ")])
+                        _c("h6", {
+                          domProps: { innerHTML: _vm._s(_vm.underText) }
+                        })
                       ]
                     ),
                     _vm._v(" "),
-                    _c("div", { staticClass: "col-auto" }, [
-                      _c(
-                        "a",
-                        {
-                          attrs: {
-                            href: "/logout",
-                            onclick: "return confirm ('Точно выйти?')"
-                          }
-                        },
-                        [
-                          _c("img", {
-                            staticClass: "button-exit-on-top-menu",
+                    _c(
+                      "div",
+                      {
+                        staticClass: "col-auto",
+                        on: {
+                          mouseenter: _vm.logoutMouseEnter,
+                          mouseleave: _vm.logoutMouseLeave
+                        }
+                      },
+                      [
+                        _c(
+                          "a",
+                          {
                             attrs: {
-                              src: "/storage/img/main/exit_button.png",
-                              alt: "Выход"
+                              href: this.logoutRoute,
+                              onclick: "return confirm ('Точно выйти?')"
                             }
-                          })
-                        ]
-                      )
-                    ])
+                          },
+                          [
+                            _c("img", {
+                              staticClass: "button-exit-on-top-menu",
+                              attrs: { src: _vm.logoutButtonSrc, alt: "Выход" }
+                            })
+                          ]
+                        )
+                      ]
+                    )
                   ])
                 ])
               : _c("div", { staticClass: "row" }, [
@@ -37857,10 +37880,7 @@ var render = function() {
                       [
                         _c("img", {
                           staticClass: "button-exit-on-top-menu",
-                          attrs: {
-                            src: "/storage/img/main/exit_button.png",
-                            alt: "Выход"
-                          }
+                          attrs: { src: _vm.logoutButtonSrc, alt: "Выход" }
                         })
                       ]
                     )
@@ -37896,7 +37916,7 @@ var render = function() {
                         "a",
                         {
                           staticClass: "nav-link",
-                          attrs: { href: section.url }
+                          attrs: { href: section.uri }
                         },
                         [_vm._v(_vm._s(section.name))]
                       )
@@ -37916,7 +37936,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("li", { staticClass: "nav-item" }, [
-      _c("a", { staticClass: "nav-link", attrs: { href: "/main" } }, [
+      _c("a", { staticClass: "nav-link", attrs: { href: "/home" } }, [
         _vm._v("Главная")
       ])
     ])
@@ -50507,8 +50527,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\laragon_full\www\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\laragon_full\www\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\laragon_full\www\fizika2020\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\laragon_full\www\fizika2020\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
