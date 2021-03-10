@@ -15,9 +15,9 @@
 ```code
 mysql -u root -p fizika2020
 ```
-4. Войдя в >mysql создать пользователя otto2020 и задать ему пароль:
+4. Войдя в >mysql создать пользователя oto2020 и задать ему пароль:
 ```code
-CREATE USER 'otto2020' IDENTIFIED BY 'password';
+CREATE USER 'oto2020' IDENTIFIED BY 'password';
 ```
 5. Дадим пользователю 'oto2020' все привелегии по работае с таблицами БД fizika 2020:
 ```code
