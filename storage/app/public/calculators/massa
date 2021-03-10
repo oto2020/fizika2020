@@ -1,0 +1,19 @@
+{
+    "name":"Вес и масса",
+    "symbolSI":"кг",
+    "nameSI":"килограмм",
+    "units":[
+        {
+            "symbol":"кг",
+            "name":"килограмм",
+            "toSI":{"function":{"arguments":"x","body":"return x;"}},
+            "fromSI":{"function":{"arguments":"x","body":"return x;"}}
+        },
+        {
+            "symbol":"гр",
+            "name":"грамм",
+            "toSI":{"function":{"arguments":"x","body":"return x/1000;"}},
+            "fromSI":{"function":{"arguments":"x","body":"return x*1000;"}}
+        }
+    ]
+}

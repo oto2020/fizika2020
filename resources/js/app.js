@@ -23,6 +23,7 @@ Vue.use(VueMobileDetection);
 
 Vue.component('example_component', require('./components/ExampleComponent.vue').default);
 Vue.component('top_menu', require('./components/TopMenuComponent.vue').default);
+Vue.component('units_calc', require('./components/CalcComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

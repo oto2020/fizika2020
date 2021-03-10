@@ -22,5 +22,5 @@ Route::get('/logout', 'Auth\LoginController@logout');
 Route::get('/', function () {
     return view('welcome');
 });
-
+Route::get('/calc', 'CalcController@calcPage')->name('calc');
 Route::get('/{school}', 'SchoolController@schoolPage')->name('school');
