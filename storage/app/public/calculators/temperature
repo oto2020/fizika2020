@@ -6,26 +6,26 @@
         {
             "symbol":"°C",
             "name":"градус Цельсия",
-            "toSI":{"function":{"arguments":"x","body":"return x;"}},
-            "fromSI":{"function":{"arguments":"x","body":"return x;"}}
+            "toSI":"x",
+            "fromSI":"x"
         },
         {
             "symbol":"°K",
             "name":"градус Кельвина",
-            "toSI":{"function":{"arguments":"x","body":"return x-273.15;"}},
-            "fromSI":{"function":{"arguments":"x","body":"return x+273.15;"}}
+            "toSI":"x - 273.15",
+            "fromSI":"x + 273.15"
         },
         {
             "symbol":"°F",
             "name":"градус Фаренгейта",
-            "toSI":{"function":{"arguments":"x","body":"return (x-32)*5/9;"}},
-            "fromSI":{"function":{"arguments":"x","body":"return x*9/5+32;"}}
+            "toSI":"(x-32)*5/9",
+            "fromSI":"x*9/5+32"
         },
         {
             "symbol":"°Ra",
             "name":"градус Ранкина",
-            "toSI":{"function":{"arguments":"x","body":"return (x-491)/1.8;"}},
-            "fromSI":{"function":{"arguments":"x","body":"return x*1.8+491.67;"}}
+            "toSI":"(x-491)/1.8",
+            "fromSI":"x*1.8+491.67"
         }
     ]
 }

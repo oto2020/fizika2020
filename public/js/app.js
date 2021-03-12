@@ -1922,10 +1922,112 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['units'],
-  mounted: function mounted() {
-    console.log('Example component mounted.');
+  props: ['calculators'],
+  data: function data() {
+    return {
+      index: 0,
+      // текущий выбранный элемент выпадающего списка
+      units: this.calculators[0].units,
+      // юниты (единицы измерения) текущего выбранного калькулятора
+      columns: [// сколько объектов в этом массиве, столько и списков будет создано. в каждом списке по умолчанию выбраны самые первые юниты
+      {
+        selectedUnitIndex: 0,
+        value: 1.0
+      }, {
+        selectedUnitIndex: 0,
+        value: 1.0
+      }],
+      isActive: false
+    };
+  },
+  methods: {
+    // Выбор калькулятора из выпадающего списка по индексу i
+    selectCalculator: function selectCalculator(i) {
+      // при переключении калькулятора будут 2 столбца, в котором будут выбраны первые строки
+      this.columns = [{
+        selectedUnitIndex: 0,
+        value: 1.0
+      }, {
+        selectedUnitIndex: 0,
+        value: 1.0
+      }]; // обновляем текущий индекс выпадающего списка
+
+      this.index = i; // обновляем список текущих единиц измерения
+
+      this.units = this.calculators[i].units;
+      console.log('Переключил на: ' + this.calculators[i].name);
+    },
+    selectUnit: function selectUnit(unitRowIndex, columnIndex) {
+      console.log('В столбце [' + columnIndex + '] выбрана строка [' + unitRowIndex + ']'); // записываем активный юнит-строку столбца columnIndex
+
+      this.columns[columnIndex].selectedUnitIndex = unitRowIndex; // вызываем конвертацию из другого столбца, но только не из этого
+
+      var tempColumn = columnIndex === 0 ? 1 : 0; // если это 0 -- выбираем 1, а если это не 0, то выбираем 0
+
+      this.convertFromThisColumn(tempColumn);
+    },
+    // добавляет или не добавляет класс "active" к строке-юниту
+    isActiveUnit: function isActiveUnit(unitRowIndex, columnIndex) {
+      if (this.columns[columnIndex].selectedUnitIndex === unitRowIndex) return "active";else return "";
+    },
+    // производит конвертацию величин. в качестве аргумента указывается номер столбца, изменение которого инициирует конвертацию
+    convertFromThisColumn: function convertFromThisColumn(columnIndex) {
+      // значение изменённого столбца
+      var value = this.columns[columnIndex].value;
+      console.log('Конвертируем. Инициатор столбец номер: ' + columnIndex); // определим текущую активную строку столбца, по которому кликнули или редактировани input
+
+      var unitRowIndex = this.columns[columnIndex].selectedUnitIndex; // определим функцию перевода в SI
+
+      var convertToSI = this.getFunction(this.units[unitRowIndex].toSI); // Переводим изменённое значение в SI:
+
+      var valueSI = convertToSI(value);
+      console.log('Получено значение в системе SI: ' + valueSI + ' ' + this.calculators[this.index].symbolSI);
+
+      if (valueSI !== valueSI) {
+        console.log('Предотвращение NaN');
+        value = 0;
+      } // Пробежимся по всем столбцам и переведём fromSI
+
+
+      for (var i = 0; i < this.columns.length; i++) {
+        // текущий столбец не трогаем
+        if (i === columnIndex) continue; // какая строка-юнит выбрана в текущем перебираемом столбце
+
+        var selectedUnitIndex = this.columns[i].selectedUnitIndex; // вытащим из юнита, выбранного в этом столбце: функцию перевода fromSI
+
+        var convertFromSI = this.getFunction(this.units[selectedUnitIndex].fromSI); // переводим fromSI в текущую единицу измерения текущего столбца
+
+        this.columns[i].value = convertFromSI(valueSI);
+      }
+    },
+    // возвращает функцию из строкового представления тела функции
+    getFunction: function getFunction(stringBody) {
+      // определим функцию перевода в SI
+      var functionBody = "return parseFloat(" + stringBody + ");";
+      return new Function("x", functionBody);
+    }
   }
 });
 
@@ -37693,34 +37795,122 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("p", [_vm._v("Это шаблон компонента")]),
-    _vm._v(" "),
-    _c("div", { staticClass: "row" }, [
+    _c("div", { staticClass: "dropdown" }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-lg btn-dark dropdown-toggle",
+          attrs: { type: "button", "data-toggle": "dropdown" }
+        },
+        [
+          _vm._v(
+            "\n            " +
+              _vm._s(_vm.calculators[_vm.index].name) +
+              "\n        "
+          )
+        ]
+      ),
+      _vm._v(" "),
       _c(
         "div",
-        { staticClass: "col-2" },
-        [
-          _c(
-            "row",
-            _vm._l(_vm.units, function(unit) {
-              return _c(
-                "button",
+        { staticClass: "dropdown-menu" },
+        _vm._l(_vm.calculators, function(calc, i) {
+          return _c(
+            "a",
+            {
+              staticClass: "dropdown-item",
+              attrs: { href: "#" },
+              on: {
+                click: function($event) {
+                  return _vm.selectCalculator(i)
+                }
+              }
+            },
+            [_vm._v(_vm._s(calc.name))]
+          )
+        }),
+        0
+      )
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "row mt-4" },
+      _vm._l(_vm.columns, function(column, columnIndex) {
+        return _c("div", { staticClass: "col" }, [
+          _c("label", [_vm._v("Введите значение:")]),
+          _vm._v(" "),
+          _c("div", { staticClass: "input-group mb-3" }, [
+            _c("div", { staticClass: "input-group-prepend" }, [
+              _c("span", { staticClass: "input-group-text" }, [
+                _vm._v(_vm._s(_vm.units[column.selectedUnitIndex].symbol))
+              ])
+            ]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
                 {
-                  staticClass:
-                    "btn btn-outline-info btn-block button-calc-unit my-1",
-                  attrs: { type: "button" }
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.columns[columnIndex].value,
+                  expression: "columns[columnIndex].value"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: { type: "text", "aria-describedby": "basic-addon3" },
+              domProps: { value: _vm.columns[columnIndex].value },
+              on: {
+                input: [
+                  function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(
+                      _vm.columns[columnIndex],
+                      "value",
+                      $event.target.value
+                    )
+                  },
+                  function($event) {
+                    return _vm.convertFromThisColumn(columnIndex)
+                  }
+                ]
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c(
+            "ul",
+            { staticClass: "list-group" },
+            _vm._l(_vm.units, function(unit, unitRowIndex) {
+              return _c(
+                "li",
+                {
+                  staticClass: "list-group-item",
+                  class: _vm.isActiveUnit(unitRowIndex, columnIndex),
+                  on: {
+                    click: function($event) {
+                      return _vm.selectUnit(unitRowIndex, columnIndex)
+                    }
+                  }
                 },
-                [_vm._v(_vm._s(unit.name))]
+                [
+                  _c("div", { staticClass: "float-left" }, [
+                    _vm._v(_vm._s(unit.symbol) + " ")
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "float-right" }, [
+                    _vm._v(_vm._s(unit.name) + " ")
+                  ])
+                ]
               )
             }),
             0
           )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-10" })
-    ])
+        ])
+      }),
+      0
+    )
   ])
 }
 var staticRenderFns = []

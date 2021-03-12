@@ -6,6 +6,7 @@
 
 html, body {
     height: 100%;
+    width:100%;
 }
 
 // Для высоты страницы 100% и размещения футера стабильно внизу страницы
@@ -35,17 +36,27 @@ html, body {
     max-width: none;
     width: 94%;
 }
+.page-content {
+    max-width: none;
+    min-width: 700px;
+    padding-left:10px;
+    padding-right:5px;
+}
+.row {
+    padding-left:10px;
+    padding-right:5px;
+}
 
+//в случае уменьшения ширины экрана
 @media screen and (max-width: 1366px) {
+    .wrapper
+    {
+        width: 100%;
+    }
     .container {
         width:100%;
-        padding-left: 0px;
-        padding-right: 0px;
     }
-    .row {
-        padding-left: 15px;
-    }
-    .content {
+    .page-content {
         width: 100%;
     }
 

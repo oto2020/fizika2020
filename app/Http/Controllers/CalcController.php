@@ -11,14 +11,13 @@ class CalcController extends Controller
     function calcPage()
     {
         // массив с путями к JSON-содержимому
-        $unitsPath = Storage::allFiles('public/calculators');
+        $calculatorsPath = Storage::allFiles('public/calculators');
         // массив с содержимым
-        $units=[];
-        foreach($unitsPath as $path)
+        $calculators=[];
+        foreach($calculatorsPath as $path)
         {
-            $units[]= json_decode(Storage::get($path)); // dd($units);
+            $calculators[]= json_decode(Storage::get($path)); // dd($units);
         }
-
-        return view('calcpage', compact('units'));
+        return view('calcpage', compact('calculators'));
     }
 }
