@@ -17,6 +17,9 @@
                         <span class="input-group-text">{{units[column.selectedUnitIndex].symbol}}</span>
                     </div>
                     <input v-model="columns[columnIndex].value" @input="convertFromThisColumn(columnIndex)" type="text" class="form-control"  aria-describedby="basic-addon3" >
+                    <div class="input-group-append">
+                        <span class="input-group-text">1.35*10^2</span>
+                    </div>
                 </div>
 
 
