@@ -2109,7 +2109,7 @@ __webpack_require__.r(__webpack_exports__);
           standartValue *= 10;
 
           if (counter > 16) {
-            counter = '> 16';
+            counter = ' < -16';
             break;
           }
         }
@@ -2131,7 +2131,7 @@ __webpack_require__.r(__webpack_exports__);
           _standartValue /= 10;
 
           if (_counter > 16) {
-            _counter = '< -16';
+            _counter = ' > 16';
             break;
           }
         }

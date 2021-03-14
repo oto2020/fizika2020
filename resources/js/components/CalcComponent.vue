@@ -205,7 +205,7 @@
                         standartValue *= 10;
                         if (counter > 16)
                         {
-                            counter = '> 16';
+                            counter = ' < -16';
                             break;
                         }
                     }
@@ -226,7 +226,7 @@
                         standartValue /= 10;
                         if (counter > 16)
                         {
-                            counter = '< -16'
+                            counter = ' > 16'
                             break;
                         }
                     }
