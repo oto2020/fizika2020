@@ -5,10 +5,12 @@
  */
 
 require('./bootstrap');
+
 import VueMobileDetection from "vue-mobile-detection";
 
 window.Vue = require('vue');
 Vue.use(VueMobileDetection);
+
 
 /**
  * The following block of code may be used to automatically register your

@@ -1946,6 +1946,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['calculators'],
   data: function data() {
@@ -1962,7 +1965,8 @@ __webpack_require__.r(__webpack_exports__);
           part1: 1,
           part2: 0,
           stepen10: 0
-        }
+        },
+        inputError: ''
       }, {
         selectedUnitIndex: 0,
         value: 1.0,
@@ -1970,8 +1974,10 @@ __webpack_require__.r(__webpack_exports__);
           part1: 1,
           part2: 0,
           stepen10: 0
-        }
-      }]
+        },
+        inputError: ''
+      }],
+      calc: {}
     };
   },
   methods: {
@@ -1985,7 +1991,8 @@ __webpack_require__.r(__webpack_exports__);
           part1: 1,
           part2: 0,
           stepen10: 0
-        }
+        },
+        inputError: ''
       }, {
         selectedUnitIndex: 0,
         value: 1.0,
@@ -1993,7 +2000,8 @@ __webpack_require__.r(__webpack_exports__);
           part1: 1,
           part2: 0,
           stepen10: 0
-        }
+        },
+        inputError: ''
       }]; // обновляем текущий индекс выпадающего списка
 
       this.index = i; // обновляем список текущих единиц измерения
@@ -2012,22 +2020,44 @@ __webpack_require__.r(__webpack_exports__);
       this.convertFromThisColumn(tempColumn);
     },
     // возвращает название класса, который добавляется в зависимости от того, выделен ли юнит unitRowIndex в столбце columnsIndex
-    isActiveUnit: function isActiveUnit(unitRowIndex, columnIndex) {
+    activeUnitClassName: function activeUnitClassName(unitRowIndex, columnIndex) {
       if (this.columns[columnIndex].selectedUnitIndex === unitRowIndex) return "active";else return "";
+    },
+    // возвращает название класса, который добавляется в зависимости от того, есть ли ошибка при заполнении инпута соответствующего столбца
+    invalidInputClassName: function invalidInputClassName(columnIndex) {
+      if (this.columns[columnIndex].inputError !== '') return "is-invalid";else return "";
+    },
+    // если всё ок, то возвращается пустой inputError
+    validateInput: function validateInput(value) {
+      var inputError = ''; // если содержатся какие-либо символы кроме цифр, минуса и точки
+
+      if (value.toString().match(/[^0-9\.\-]+/)) inputError = 'Недопустимый символ'; // если в глобальном поиске точек найдётся больше двух
+
+      var matches = value.toString().match(/\./g);
+      if (matches !== null && matches.length > 1) inputError = 'Больше одной точки'; // если минус и будет, то должен он быть только один раз
+
+      matches = value.toString().match(/\-/g);
+      if (matches !== null && matches.length > 1) inputError = 'Больше одного знака минус';
+      if (matches !== null && value.toString().indexOf("-") !== 0) inputError = 'Знак минус находится не на своём месте';
+      return inputError;
+    },
+    isNaN: function isNaN(value) {
+      return value !== value;
     },
     // производит конвертацию величин. в качестве аргумента указывается столбец columnIndex, изменение которого инициирует конвертацию
     convertFromThisColumn: function convertFromThisColumn(columnIndex) {
       // значение изменённого столбца
       var value = this.columns[columnIndex].value;
 
-      if (parseFloat(value) !== parseFloat(value)) {
-        console.log('Предотвращение пустой строки');
+      if (this.isNaN(parseFloat(value))) {
+        console.log('Предотвращение NaN 1');
         value = 0;
-      } // обновляем стандартный вид числа для столбца, в котором производились изменения
+      } // ВАЛИДАЦИЯ
 
 
-      this.columns[columnIndex].value10 = this.getValue10(value);
-      console.log('Конвертируем. Инициатор столбец номер: ' + columnIndex); // определим текущую активную строку столбца, по которому кликнули или редактировани input
+      this.columns[columnIndex].inputError = this.validateInput(value); // обновляем стандартный вид числа для столбца, в котором производились изменения
+
+      this.columns[columnIndex].value10 = this.getValue10(value); // вытащим текущий активный юнит-строку столбца
 
       var unitRowIndex = this.columns[columnIndex].selectedUnitIndex; // определим функцию перевода в SI
 
@@ -2036,10 +2066,10 @@ __webpack_require__.r(__webpack_exports__);
       var valueSI = convertToSI(value);
       console.log('Получено значение в системе SI: ' + valueSI + ' ' + this.calculators[this.index].symbolSI);
 
-      if (valueSI !== valueSI) {
+      if (this.isNaN(valueSI)) {
         console.log('Предотвращение NaN 2');
-        this.columns[columnIndex].value = 1;
-      } // Пробежимся по всем столбцам и переведём fromSI
+        this.columns[columnIndex].value = 0;
+      } // Пробежимся по всем столбцам кроме текущего и ПЕРЕВЕДЁМ fromSI
 
 
       for (var i = 0; i < this.columns.length; i++) {
@@ -2052,7 +2082,11 @@ __webpack_require__.r(__webpack_exports__);
 
         this.columns[i].value = convertFromSI(valueSI); // обновляем стандартный вид числа для сконвентированного выражения
 
-        this.columns[i].value10 = this.getValue10(this.columns[i].value);
+        this.columns[i].value10 = this.getValue10(this.columns[i].value); // когда JS будет переводить наши числа в свой e+21 формат -- мы будем переводить это число к обратному виду в форме строки
+
+        if (this.columns[i].value10.stepen10 > 20 || this.columns[i].value10.stepen10 < -6) {
+          this.columns[i].value = this.eNumberToNormalNumberLongString(this.columns[i].value);
+        }
       }
     },
     // переводит 0.0039 => 3.9 * 10 ^ -3
@@ -2093,8 +2127,8 @@ __webpack_require__.r(__webpack_exports__);
 
       if (value >= 1 && value < 10 || value === 0) {
         // число приводится к стандартному виду, а степень 10 устанавливается как 0
-        setResult(value, 0);
-        console.log('standartValue: ' + value);
+        setResult(value, 0); // console.log('standartValue: ' + value);
+
         return result;
       } // если значение меньше 1, значит нам нужно будет умножать на 10 пока значение на станет >= 1 и < 10
 
@@ -2108,8 +2142,8 @@ __webpack_require__.r(__webpack_exports__);
           counter++;
           standartValue *= 10;
 
-          if (counter > 16) {
-            counter = ' < -16';
+          if (counter > 320) {
+            counter = ' < -320';
             break;
           }
         }
@@ -2118,7 +2152,7 @@ __webpack_require__.r(__webpack_exports__);
 
         setResult(standartValue, -counter);
         return result;
-      } // если значение меньше 1, значит нам нужно будет умножать на 10 пока значение на станет >= 1 и < 10
+      } // если значение больше или равно 10, значит нам нужно будет делить на 10 пока значение на станет >= 1 и < 10
 
 
       if (value >= 10) {
@@ -2130,8 +2164,9 @@ __webpack_require__.r(__webpack_exports__);
           _counter++;
           _standartValue /= 10;
 
-          if (_counter > 16) {
-            _counter = ' > 16';
+          if (_counter > 300) {
+            // ЧИСЛО ПРИНИМАЕТ ВИД 9.99e+21
+            _counter = ' > 300';
             break;
           }
         }
@@ -2147,7 +2182,66 @@ __webpack_require__.r(__webpack_exports__);
       // определим функцию перевода в SI
       var functionBody = "return parseFloat(" + stringBody + ");";
       return new Function("x", functionBody);
+    },
+    // переводит число 3.9e-7 в строку '0.00000039'. Это нужно для того, чтобы избавиться от тотбражения в виде 3.9e-7
+    eNumberToNormalNumberLongString: function eNumberToNormalNumberLongString(value) {
+      var resultString = '';
+      var isNegative = value < 0;
+      value += ''; // разобьем на две части: до e+ и после e+
+
+      var numberEParts = [];
+      if (value.match(/e\+/) !== null) numberEParts = value.split('e+'); // число с положительным порядком, например: '1.234e+21'
+
+      if (value.match(/e-/) !== null) numberEParts = value.split('e-'); // число с положительным порядком, например: '1.234e-6'
+
+      var number = numberEParts[0];
+      if (isNegative) number = number.replace('-', '');
+      var stepen10 = numberEParts[1];
+
+      if (value.match(/e\+/) !== null) {
+        resultString = number.replace('.', ''); // узнаем n кол-во символов после запятой, чтобы потом убрать запятую и добавить в конец (stepen10 - n) нулей
+
+        var lengthAfterComma = 0;
+        if (number.match(/\./) !== null) lengthAfterComma = number.split(".")[1].length; // количество нулей, что нужно добавить к resultString
+
+        var count0 = stepen10 - lengthAfterComma;
+
+        for (var i = 0; i < count0; i++) {
+          resultString += '0';
+        }
+      } // число с отрицательным порядком
+
+
+      if (value.match(/e-/) !== null) {
+        resultString = '0.'; // количество нулей, что нужно добавить к resultString
+
+        var _count = stepen10 - 1;
+
+        for (var _i = 0; _i < _count; _i++) {
+          resultString += '0';
+        }
+
+        resultString += number.replace('.', '');
+      } // если число изначально было отрицательным, то добавляем минус
+
+
+      if (isNegative) resultString = '-' + resultString;
+      console.log('resultString: ' + resultString);
+      return resultString;
     }
+  },
+  mounted: function mounted() {// Хитро подключаем нашу бибилиотеку
+    // $.getScript("/js/myCalc.js", function(){
+    //     //используем скрипт здесь
+    //     this.calc = new myCalc();
+    //     this.calc.helloWorld();
+    // });
+    // var script = document.createElement('script');
+    // script.src = "/js/myLib.js";
+    // document.getElementsByTagName('head')[0].appendChild(script);
+    // let myLib = document.createElement('script');
+    // document.head.appendChild(myLib);
+    // myLib.helloWorld();
   }
 });
 
@@ -37960,6 +38054,16 @@ var render = function() {
         return _c("div", { staticClass: "col" }, [
           _c("label", [_vm._v("Введите значение:")]),
           _vm._v(" "),
+          _vm.columns[columnIndex].inputError !== ""
+            ? _c("small", { staticClass: "text-danger" }, [
+                _vm._v(
+                  "\n                " +
+                    _vm._s(_vm.columns[columnIndex].inputError) +
+                    "\n            "
+                )
+              ])
+            : _vm._e(),
+          _vm._v(" "),
           _c("div", { staticClass: "input-group mb-3" }, [
             _c("div", { staticClass: "input-group-prepend" }, [
               _c("span", { staticClass: "input-group-text" }, [
@@ -37977,6 +38081,7 @@ var render = function() {
                 }
               ],
               staticClass: "form-control",
+              class: _vm.invalidInputClassName(columnIndex),
               attrs: { type: "text", "aria-describedby": "basic-addon3" },
               domProps: { value: _vm.columns[columnIndex].value },
               on: {
@@ -38021,7 +38126,7 @@ var render = function() {
                 "li",
                 {
                   staticClass: "list-group-item",
-                  class: _vm.isActiveUnit(unitRowIndex, columnIndex),
+                  class: _vm.activeUnitClassName(unitRowIndex, columnIndex),
                   on: {
                     click: function($event) {
                       return _vm.selectUnit(unitRowIndex, columnIndex)
