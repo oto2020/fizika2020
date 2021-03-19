@@ -1949,6 +1949,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['calculators'],
   data: function data() {
@@ -2006,7 +2012,15 @@ __webpack_require__.r(__webpack_exports__);
 
       this.index = i; // обновляем список текущих единиц измерения
 
-      this.units = this.calculators[i].units;
+      this.units = this.calculators[i].units; // пробежимся по юнитам и приведём funcToSI и funcFromSI к виду функций JS
+
+      for (var _i = 0; _i < this.units.length; _i++) {
+        //TODO: убрать это
+        console.log(infixToPostfix(this.units[_i].funcToSI));
+        this.units[_i].funcToSI = new Function("x", "return parseFloat(" + this.units[_i].funcToSI + ");");
+        this.units[_i].funcFromSI = new Function("x", "return parseFloat(" + this.units[_i].funcFromSI + ");");
+      }
+
       console.log('Переключил на: ' + this.calculators[i].name);
     },
     // Выбор юнита-строки unitRowIndex из столбца columnIndex
@@ -2021,11 +2035,11 @@ __webpack_require__.r(__webpack_exports__);
     },
     // возвращает название класса, который добавляется в зависимости от того, выделен ли юнит unitRowIndex в столбце columnsIndex
     activeUnitClassName: function activeUnitClassName(unitRowIndex, columnIndex) {
-      if (this.columns[columnIndex].selectedUnitIndex === unitRowIndex) return "active";else return "";
+      return this.columns[columnIndex].selectedUnitIndex === unitRowIndex ? "active" : "";
     },
     // возвращает название класса, который добавляется в зависимости от того, есть ли ошибка при заполнении инпута соответствующего столбца
     invalidInputClassName: function invalidInputClassName(columnIndex) {
-      if (this.columns[columnIndex].inputError !== '') return "is-invalid";else return "";
+      return this.columns[columnIndex].inputError !== '' ? "is-invalid" : "";
     },
     // если всё ок, то возвращается пустой inputError
     validateInput: function validateInput(value) {
@@ -2061,7 +2075,7 @@ __webpack_require__.r(__webpack_exports__);
 
       var unitRowIndex = this.columns[columnIndex].selectedUnitIndex; // определим функцию перевода в SI
 
-      var convertToSI = this.getFunction(this.units[unitRowIndex].toSI); // Переводим изменённое значение в SI:
+      var convertToSI = this.units[unitRowIndex].funcToSI; // Переводим изменённое значение в SI:
 
       var valueSI = convertToSI(value);
       console.log('Получено значение в системе SI: ' + valueSI + ' ' + this.calculators[this.index].symbolSI);
@@ -2069,24 +2083,23 @@ __webpack_require__.r(__webpack_exports__);
       if (this.isNaN(valueSI)) {
         console.log('Предотвращение NaN 2');
         this.columns[columnIndex].value = 0;
-      } // Пробежимся по всем столбцам кроме текущего и ПЕРЕВЕДЁМ fromSI
+      } // Пробежимся по всем столбцам кроме текущего и ПЕРЕВЕДЁМ funcFromSI
 
 
       for (var i = 0; i < this.columns.length; i++) {
         // текущий столбец не трогаем
         if (i === columnIndex) continue; // какая строка-юнит выбрана в текущем перебираемом столбце
 
-        var selectedUnitIndex = this.columns[i].selectedUnitIndex; // вытащим из юнита, выбранного в этом столбце: функцию перевода fromSI
+        var selectedUnitIndex = this.columns[i].selectedUnitIndex; // вытащим из юнита, выбранного в этом столбце: функцию перевода funcFromSI
 
-        var convertFromSI = this.getFunction(this.units[selectedUnitIndex].fromSI); // переводим fromSI в текущую единицу измерения текущего столбца
+        var convertFromSI = this.units[selectedUnitIndex].funcFromSI; // переводим funcFromSI в текущую единицу измерения текущего столбца
 
-        this.columns[i].value = convertFromSI(valueSI); // обновляем стандартный вид числа для сконвентированного выражения
+        this.columns[i].value = convertFromSI(valueSI); // ---ДОПОЛНИТЕЛЬНО ПОСЛЕ КОНВЕРТАЦИИ---
+        // обновляем стандартный вид числа для сконвентированного выражения
 
         this.columns[i].value10 = this.getValue10(this.columns[i].value); // когда JS будет переводить наши числа в свой e+21 формат -- мы будем переводить это число к обратному виду в форме строки
 
-        if (this.columns[i].value10.stepen10 > 20 || this.columns[i].value10.stepen10 < -6) {
-          this.columns[i].value = this.eNumberToNormalNumberLongString(this.columns[i].value);
-        }
+        if (this.columns[i].value10.stepen10 > 20 || this.columns[i].value10.stepen10 < -6) this.columns[i].value = this.eNumberToNormalNumberLongString(this.columns[i].value);
       }
     },
     // переводит 0.0039 => 3.9 * 10 ^ -3
@@ -2177,12 +2190,6 @@ __webpack_require__.r(__webpack_exports__);
         return result;
       }
     },
-    // создает функцию из строкового представления тела функции
-    getFunction: function getFunction(stringBody) {
-      // определим функцию перевода в SI
-      var functionBody = "return parseFloat(" + stringBody + ");";
-      return new Function("x", functionBody);
-    },
     // переводит число 3.9e-7 в строку '0.00000039'. Это нужно для того, чтобы избавиться от тотбражения в виде 3.9e-7
     eNumberToNormalNumberLongString: function eNumberToNormalNumberLongString(value) {
       var resultString = '';
@@ -2217,7 +2224,7 @@ __webpack_require__.r(__webpack_exports__);
 
         var _count = stepen10 - 1;
 
-        for (var _i = 0; _i < _count; _i++) {
+        for (var _i2 = 0; _i2 < _count; _i2++) {
           resultString += '0';
         }
 
@@ -2230,13 +2237,10 @@ __webpack_require__.r(__webpack_exports__);
       return resultString;
     }
   },
-  mounted: function mounted() {// Хитро подключаем нашу бибилиотеку
-    // $.getScript("/js/myCalc.js", function(){
-    //     //используем скрипт здесь
-    //     this.calc = new myCalc();
-    //     this.calc.helloWorld();
-    // });
-    // var script = document.createElement('script');
+  mounted: function mounted() {
+    this.selectCalculator(this.index); // Хитро подключаем нашу бибилиотеку
+
+    console.log(infixToPostfix("x ^ y / (5 * z) + 10")); // var script = document.createElement('script');
     // script.src = "/js/myLib.js";
     // document.getElementsByTagName('head')[0].appendChild(script);
     // let myLib = document.createElement('script');
@@ -38081,7 +38085,9 @@ var render = function() {
                 }
               ],
               staticClass: "form-control",
-              class: _vm.invalidInputClassName(columnIndex),
+              class: {
+                "is-invalid": _vm.columns[columnIndex].inputError !== ""
+              },
               attrs: { type: "text", "aria-describedby": "basic-addon3" },
               domProps: { value: _vm.columns[columnIndex].value },
               on: {
@@ -38126,7 +38132,11 @@ var render = function() {
                 "li",
                 {
                   staticClass: "list-group-item",
-                  class: _vm.activeUnitClassName(unitRowIndex, columnIndex),
+                  class: {
+                    active:
+                      _vm.columns[columnIndex].selectedUnitIndex ===
+                      unitRowIndex
+                  },
                   on: {
                     click: function($event) {
                       return _vm.selectUnit(unitRowIndex, columnIndex)
@@ -38135,11 +38145,11 @@ var render = function() {
                 },
                 [
                   _c("div", { staticClass: "float-left" }, [
-                    _vm._v(_vm._s(unit.symbol) + " ")
+                    _vm._v(_vm._s(unit.symbol))
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "float-right" }, [
-                    _vm._v(_vm._s(unit.name) + " ")
+                    _vm._v(_vm._s(unit.name))
                   ])
                 ]
               )

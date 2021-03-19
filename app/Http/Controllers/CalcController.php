@@ -20,4 +20,5 @@ class CalcController extends Controller
         }
         return view('calcpage', compact('calculators'));
     }
+
 }
