@@ -2033,14 +2033,6 @@ __webpack_require__.r(__webpack_exports__);
 
       this.convertFromThisColumn(tempColumn);
     },
-    // возвращает название класса, который добавляется в зависимости от того, выделен ли юнит unitRowIndex в столбце columnsIndex
-    activeUnitClassName: function activeUnitClassName(unitRowIndex, columnIndex) {
-      return this.columns[columnIndex].selectedUnitIndex === unitRowIndex ? "active" : "";
-    },
-    // возвращает название класса, который добавляется в зависимости от того, есть ли ошибка при заполнении инпута соответствующего столбца
-    invalidInputClassName: function invalidInputClassName(columnIndex) {
-      return this.columns[columnIndex].inputError !== '' ? "is-invalid" : "";
-    },
     // если всё ок, то возвращается пустой inputError
     validateInput: function validateInput(value) {
       var inputError = ''; // если содержатся какие-либо символы кроме цифр, минуса и точки

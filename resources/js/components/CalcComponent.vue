@@ -101,15 +101,6 @@ export default {
 
         },
 
-        // возвращает название класса, который добавляется в зависимости от того, выделен ли юнит unitRowIndex в столбце columnsIndex
-        activeUnitClassName(unitRowIndex, columnIndex) {
-            return (this.columns[columnIndex].selectedUnitIndex === unitRowIndex) ? "active" : "";
-        },
-
-        // возвращает название класса, который добавляется в зависимости от того, есть ли ошибка при заполнении инпута соответствующего столбца
-        invalidInputClassName(columnIndex) {
-            return (this.columns[columnIndex].inputError !== '') ? "is-invalid" : "";
-        },
 
         // если всё ок, то возвращается пустой inputError
         validateInput(value) {

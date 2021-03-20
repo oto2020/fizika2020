@@ -27,7 +27,8 @@
 <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
-    <script src="/js/myCalc.js"></script>
+    <script src="/js/myPolishNotation.js"></script>
+    <script src="/js/myReverseFunction.js"></script>
 {{--    <link href="{{ asset('/css/bootstrap.css') }}" rel="stylesheet">--}}
 {{--    <link href="{{ asset('/css/main.css')}}" rel="stylesheet" type="text/css">--}}
 
