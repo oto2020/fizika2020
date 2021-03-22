@@ -39,6 +39,12 @@
                         <div class="float-right">{{ unit.name }}</div>
                     </li>
                 </ul>
+            </div>
+            <div class="col-1">
+                <br>
+                <button @click="addColumn()" type="button" class="btn btn-outline-success my-2">&#9658;</button>
+                <br>
+                <button @click="deleteColumn()" type="button" class="btn btn-outline-danger my-2">&#9668;</button>
 
             </div>
         </div>
@@ -53,39 +59,49 @@ export default {
         return {
             index: 0, // текущий выбранный элемент выпадающего списка
             units: this.calculators[0].units, // юниты (единицы измерения) текущего выбранного калькулятора
+            emptyColumn: {selectedUnitIndex: 0, value: 1.0, value10: {part1: 1, part2: 0, stepen10: 0}, inputError: ''},
             columns: [ // сколько объектов в этом массиве, столько и списков будет создано. в каждом списке по умолчанию выбраны самые первые юниты
-                {selectedUnitIndex: 0, value: 1.0, value10: {part1: 1, part2: 0, stepen10: 0}, inputError: ''},
-                {selectedUnitIndex: 0, value: 1.0, value10: {part1: 1, part2: 0, stepen10: 0}, inputError: ''}
+                Object.assign({}, this.emptyColumn), Object.assign({}, this.emptyColumn),
             ],
-            calc: {},
-
-
         }
     },
     methods: {
+        // добавление ещё одного столбца
+        addColumn() {
+            this.columns.push(Object.assign({}, this.emptyColumn));
+            this.convertFromThisColumn(0);
+        },
+        // удаление столбца
+        deleteColumn() {
+            if (this.columns.length > 2)
+            this.columns.pop();
+        },
         // Выбор калькулятора из выпадающего списка по индексу i
-        selectCalculator(i) {
-            // при переключении калькулятора будут 2 столбца, в котором будут выбраны первые строки
-            this.columns = [
-                {selectedUnitIndex: 0, value: 1.0, value10: {part1: 1, part2: 0, stepen10: 0}, inputError: ''},
-                {selectedUnitIndex: 0, value: 1.0, value10: {part1: 1, part2: 0, stepen10: 0}, inputError: ''}
-            ];
+        selectCalculator(index) {
+            //if (this.index === i) return;
+
             // обновляем текущий индекс выпадающего списка
-            this.index = i;
+            this.index = index;
 
             // обновляем список текущих единиц измерения
-            this.units = this.calculators[i].units;
+            this.units = null;
+            this.units = this.calculators[this.index].units;
 
-            // пробежимся по юнитам и приведём funcToSI и funcFromSI к виду функций JS
+            // при переключении калькулятора будут 2 столбца, в котором будут выбраны первые строки
+            this. columns = [
+                Object.assign({}, this.emptyColumn), Object.assign({}, this.emptyColumn),
+            ];
+
+
+            // пробежимся по юнитам и сформируем тело обратным функциям
             for (let i = 0; i < this.units.length; i++) {
-                //TODO: убрать это
-                console.log(infixToPostfix(this.units[i].funcToSI));
-                this.units[i].funcToSI = new Function("x", "return parseFloat(" + this.units[i].funcToSI + ");");
-
-                this.units[i].funcFromSI = new Function("x", "return parseFloat(" + this.units[i].funcFromSI + ");");
+                if (this.units[i].stringFromSI === "")
+                    this.units[i].stringFromSI = getReverseFunctionString(this.units[i].stringToSI);
+                if (this.units[i].stringToSI === "")
+                    this.units[i].stringToSI = getReverseFunctionString(this.units[i].stringFromSI);
             }
 
-            console.log('Переключил на: ' + this.calculators[i].name);
+            console.log('Переключил на: ' + this.calculators[this.index].name);
         },
 
         // Выбор юнита-строки unitRowIndex из столбца columnIndex
@@ -149,7 +165,7 @@ export default {
             let unitRowIndex = this.columns[columnIndex].selectedUnitIndex;
 
             // определим функцию перевода в SI
-            let convertToSI = this.units[unitRowIndex].funcToSI;
+            let convertToSI = new Function("x", "return parseFloat(" + this.units[unitRowIndex].stringToSI + ");");
 
             // Переводим изменённое значение в SI:
             let valueSI = convertToSI(value);
@@ -167,8 +183,8 @@ export default {
                 // какая строка-юнит выбрана в текущем перебираемом столбце
                 let selectedUnitIndex = this.columns[i].selectedUnitIndex;
 
-                // вытащим из юнита, выбранного в этом столбце: функцию перевода funcFromSI
-                let convertFromSI = this.units[selectedUnitIndex].funcFromSI;
+                // вытащим из юнита, выбранного в этом столбце: функцию перевода на основании stringFromSI
+                let convertFromSI = new Function("x", "return parseFloat(" + this.units[selectedUnitIndex].stringFromSI + ");");
 
                 // переводим funcFromSI в текущую единицу измерения текущего столбца
                 this.columns[i].value = convertFromSI(valueSI);

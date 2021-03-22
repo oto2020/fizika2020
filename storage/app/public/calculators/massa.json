@@ -6,14 +6,15 @@
         {
             "symbol":"гр",
             "name":"грамм",
-            "funcToSI":"x",
-            "funcFromSI":"x"
+            "stringToSI":"x",
+            "stringFromSI":""
         },
         {
             "symbol":"кг",
             "name":"килограмм",
-            "funcToSI":"x*1000",
-            "funcFromSI":"x/1000"
+            "stringToSI":"x*1000",
+            "stringFromSI":""
         }
+
     ]
 }

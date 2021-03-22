@@ -1955,6 +1955,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['calculators'],
   data: function data() {
@@ -1963,65 +1969,47 @@ __webpack_require__.r(__webpack_exports__);
       // текущий выбранный элемент выпадающего списка
       units: this.calculators[0].units,
       // юниты (единицы измерения) текущего выбранного калькулятора
+      emptyColumn: {
+        selectedUnitIndex: 0,
+        value: 1.0,
+        value10: {
+          part1: 1,
+          part2: 0,
+          stepen10: 0
+        },
+        inputError: ''
+      },
       columns: [// сколько объектов в этом массиве, столько и списков будет создано. в каждом списке по умолчанию выбраны самые первые юниты
-      {
-        selectedUnitIndex: 0,
-        value: 1.0,
-        value10: {
-          part1: 1,
-          part2: 0,
-          stepen10: 0
-        },
-        inputError: ''
-      }, {
-        selectedUnitIndex: 0,
-        value: 1.0,
-        value10: {
-          part1: 1,
-          part2: 0,
-          stepen10: 0
-        },
-        inputError: ''
-      }],
-      calc: {}
+      Object.assign({}, this.emptyColumn), Object.assign({}, this.emptyColumn)]
     };
   },
   methods: {
+    // добавление ещё одного столбца
+    addColumn: function addColumn() {
+      this.columns.push(Object.assign({}, this.emptyColumn));
+      this.convertFromThisColumn(0);
+    },
+    // удаление столбца
+    deleteColumn: function deleteColumn() {
+      if (this.columns.length > 2) this.columns.pop();
+    },
     // Выбор калькулятора из выпадающего списка по индексу i
-    selectCalculator: function selectCalculator(i) {
-      // при переключении калькулятора будут 2 столбца, в котором будут выбраны первые строки
-      this.columns = [{
-        selectedUnitIndex: 0,
-        value: 1.0,
-        value10: {
-          part1: 1,
-          part2: 0,
-          stepen10: 0
-        },
-        inputError: ''
-      }, {
-        selectedUnitIndex: 0,
-        value: 1.0,
-        value10: {
-          part1: 1,
-          part2: 0,
-          stepen10: 0
-        },
-        inputError: ''
-      }]; // обновляем текущий индекс выпадающего списка
+    selectCalculator: function selectCalculator(index) {
+      //if (this.index === i) return;
+      // обновляем текущий индекс выпадающего списка
+      this.index = index; // обновляем список текущих единиц измерения
 
-      this.index = i; // обновляем список текущих единиц измерения
+      this.units = null;
+      this.units = this.calculators[this.index].units; // при переключении калькулятора будут 2 столбца, в котором будут выбраны первые строки
 
-      this.units = this.calculators[i].units; // пробежимся по юнитам и приведём funcToSI и funcFromSI к виду функций JS
+      this.columns = [Object.assign({}, this.emptyColumn), Object.assign({}, this.emptyColumn)]; // пробежимся по юнитам и сформируем тело обратным функциям
 
-      for (var _i = 0; _i < this.units.length; _i++) {
-        //TODO: убрать это
-        console.log(infixToPostfix(this.units[_i].funcToSI));
-        this.units[_i].funcToSI = new Function("x", "return parseFloat(" + this.units[_i].funcToSI + ");");
-        this.units[_i].funcFromSI = new Function("x", "return parseFloat(" + this.units[_i].funcFromSI + ");");
+      for (var i = 0; i < this.units.length; i++) {
+        if (this.units[i].stringFromSI === "") this.units[i].stringFromSI = getReverseFunctionString(this.units[i].stringToSI);
+        if (this.units[i].stringToSI === "") this.units[i].stringToSI = getReverseFunctionString(this.units[i].stringFromSI);
       }
 
-      console.log('Переключил на: ' + this.calculators[i].name);
+      console.log('Переключил на: ' + this.calculators[this.index].name);
     },
     // Выбор юнита-строки unitRowIndex из столбца columnIndex
     selectUnit: function selectUnit(unitRowIndex, columnIndex) {
@@ -2067,7 +2055,7 @@ __webpack_require__.r(__webpack_exports__);
 
       var unitRowIndex = this.columns[columnIndex].selectedUnitIndex; // определим функцию перевода в SI
 
-      var convertToSI = this.units[unitRowIndex].funcToSI; // Переводим изменённое значение в SI:
+      var convertToSI = new Function("x", "return parseFloat(" + this.units[unitRowIndex].stringToSI + ");"); // Переводим изменённое значение в SI:
 
       var valueSI = convertToSI(value);
       console.log('Получено значение в системе SI: ' + valueSI + ' ' + this.calculators[this.index].symbolSI);
@@ -2082,9 +2070,9 @@ __webpack_require__.r(__webpack_exports__);
         // текущий столбец не трогаем
         if (i === columnIndex) continue; // какая строка-юнит выбрана в текущем перебираемом столбце
 
-        var selectedUnitIndex = this.columns[i].selectedUnitIndex; // вытащим из юнита, выбранного в этом столбце: функцию перевода funcFromSI
+        var selectedUnitIndex = this.columns[i].selectedUnitIndex; // вытащим из юнита, выбранного в этом столбце: функцию перевода на основании stringFromSI
 
-        var convertFromSI = this.units[selectedUnitIndex].funcFromSI; // переводим funcFromSI в текущую единицу измерения текущего столбца
+        var convertFromSI = new Function("x", "return parseFloat(" + this.units[selectedUnitIndex].stringFromSI + ");"); // переводим funcFromSI в текущую единицу измерения текущего столбца
 
         this.columns[i].value = convertFromSI(valueSI); // ---ДОПОЛНИТЕЛЬНО ПОСЛЕ КОНВЕРТАЦИИ---
         // обновляем стандартный вид числа для сконвентированного выражения
@@ -2216,7 +2204,7 @@ __webpack_require__.r(__webpack_exports__);
 
         var _count = stepen10 - 1;
 
-        for (var _i2 = 0; _i2 < _count; _i2++) {
+        for (var _i = 0; _i < _count; _i++) {
           resultString += '0';
         }
 
@@ -38046,111 +38034,147 @@ var render = function() {
     _c(
       "div",
       { staticClass: "row mt-4" },
-      _vm._l(_vm.columns, function(column, columnIndex) {
-        return _c("div", { staticClass: "col" }, [
-          _c("label", [_vm._v("Введите значение:")]),
-          _vm._v(" "),
-          _vm.columns[columnIndex].inputError !== ""
-            ? _c("small", { staticClass: "text-danger" }, [
-                _vm._v(
-                  "\n                " +
-                    _vm._s(_vm.columns[columnIndex].inputError) +
-                    "\n            "
-                )
-              ])
-            : _vm._e(),
-          _vm._v(" "),
-          _c("div", { staticClass: "input-group mb-3" }, [
-            _c("div", { staticClass: "input-group-prepend" }, [
-              _c("span", { staticClass: "input-group-text" }, [
-                _vm._v(_vm._s(_vm.units[column.selectedUnitIndex].symbol))
+      [
+        _vm._l(_vm.columns, function(column, columnIndex) {
+          return _c("div", { staticClass: "col" }, [
+            _c("label", [_vm._v("Введите значение:")]),
+            _vm._v(" "),
+            _vm.columns[columnIndex].inputError !== ""
+              ? _c("small", { staticClass: "text-danger" }, [
+                  _vm._v(
+                    "\n                " +
+                      _vm._s(_vm.columns[columnIndex].inputError) +
+                      "\n            "
+                  )
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _c("div", { staticClass: "input-group mb-3" }, [
+              _c("div", { staticClass: "input-group-prepend" }, [
+                _c("span", { staticClass: "input-group-text" }, [
+                  _vm._v(_vm._s(_vm.units[column.selectedUnitIndex].symbol))
+                ])
+              ]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.columns[columnIndex].value,
+                    expression: "columns[columnIndex].value"
+                  }
+                ],
+                staticClass: "form-control",
+                class: {
+                  "is-invalid": _vm.columns[columnIndex].inputError !== ""
+                },
+                attrs: { type: "text", "aria-describedby": "basic-addon3" },
+                domProps: { value: _vm.columns[columnIndex].value },
+                on: {
+                  input: [
+                    function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.columns[columnIndex],
+                        "value",
+                        $event.target.value
+                      )
+                    },
+                    function($event) {
+                      return _vm.convertFromThisColumn(columnIndex)
+                    }
+                  ]
+                }
+              }),
+              _vm._v(" "),
+              _c("div", { staticClass: "input-group-append" }, [
+                _c("span", { staticClass: "input-group-text" }, [
+                  _vm._v(
+                    _vm._s(_vm.columns[columnIndex].value10.part1) +
+                      "." +
+                      _vm._s(_vm.columns[columnIndex].value10.part2) +
+                      "×10"
+                  ),
+                  _c("sup", [
+                    _vm._v(_vm._s(_vm.columns[columnIndex].value10.stepen10))
+                  ])
+                ])
               ])
             ]),
             _vm._v(" "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.columns[columnIndex].value,
-                  expression: "columns[columnIndex].value"
-                }
-              ],
-              staticClass: "form-control",
-              class: {
-                "is-invalid": _vm.columns[columnIndex].inputError !== ""
-              },
-              attrs: { type: "text", "aria-describedby": "basic-addon3" },
-              domProps: { value: _vm.columns[columnIndex].value },
-              on: {
-                input: [
-                  function($event) {
-                    if ($event.target.composing) {
-                      return
+            _c(
+              "ul",
+              { staticClass: "list-group" },
+              _vm._l(_vm.units, function(unit, unitRowIndex) {
+                return _c(
+                  "li",
+                  {
+                    staticClass: "list-group-item",
+                    class: {
+                      active:
+                        _vm.columns[columnIndex].selectedUnitIndex ===
+                        unitRowIndex
+                    },
+                    on: {
+                      click: function($event) {
+                        return _vm.selectUnit(unitRowIndex, columnIndex)
+                      }
                     }
-                    _vm.$set(
-                      _vm.columns[columnIndex],
-                      "value",
-                      $event.target.value
-                    )
                   },
-                  function($event) {
-                    return _vm.convertFromThisColumn(columnIndex)
-                  }
-                ]
-              }
-            }),
-            _vm._v(" "),
-            _c("div", { staticClass: "input-group-append" }, [
-              _c("span", { staticClass: "input-group-text" }, [
-                _vm._v(
-                  _vm._s(_vm.columns[columnIndex].value10.part1) +
-                    "." +
-                    _vm._s(_vm.columns[columnIndex].value10.part2) +
-                    "×10"
-                ),
-                _c("sup", [
-                  _vm._v(_vm._s(_vm.columns[columnIndex].value10.stepen10))
-                ])
-              ])
-            ])
-          ]),
+                  [
+                    _c("div", { staticClass: "float-left" }, [
+                      _vm._v(_vm._s(unit.symbol))
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "float-right" }, [
+                      _vm._v(_vm._s(unit.name))
+                    ])
+                  ]
+                )
+              }),
+              0
+            )
+          ])
+        }),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-1" }, [
+          _c("br"),
           _vm._v(" "),
           _c(
-            "ul",
-            { staticClass: "list-group" },
-            _vm._l(_vm.units, function(unit, unitRowIndex) {
-              return _c(
-                "li",
-                {
-                  staticClass: "list-group-item",
-                  class: {
-                    active:
-                      _vm.columns[columnIndex].selectedUnitIndex ===
-                      unitRowIndex
-                  },
-                  on: {
-                    click: function($event) {
-                      return _vm.selectUnit(unitRowIndex, columnIndex)
-                    }
-                  }
-                },
-                [
-                  _c("div", { staticClass: "float-left" }, [
-                    _vm._v(_vm._s(unit.symbol))
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "float-right" }, [
-                    _vm._v(_vm._s(unit.name))
-                  ])
-                ]
-              )
-            }),
-            0
+            "button",
+            {
+              staticClass: "btn btn-outline-success my-2",
+              attrs: { type: "button" },
+              on: {
+                click: function($event) {
+                  return _vm.addColumn()
+                }
+              }
+            },
+            [_vm._v("►")]
+          ),
+          _vm._v(" "),
+          _c("br"),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-outline-danger my-2",
+              attrs: { type: "button" },
+              on: {
+                click: function($event) {
+                  return _vm.deleteColumn()
+                }
+              }
+            },
+            [_vm._v("◄")]
           )
         ])
-      }),
-      0
+      ],
+      2
     )
   ])
 }
