@@ -1,61 +1,59 @@
 {
     "name":"Длина и расстояние",
-    "symbolSI":"м",
-    "nameSI":"метр",
-    "units":[
+    "unitsOfMeasurement":[
         {
             "symbol":"м",
             "name":"метр",
-            "stringToSI":"x",
-            "stringFromSI":""
+            "defaultUnitFormula":"x",
+            "currentUnitFormula":""
         },
         {
             "symbol":"км",
             "name":"километр",
-            "stringToSI":"x*1000",
-            "stringFromSI":""
+            "defaultUnitFormula":"x*1000",
+            "currentUnitFormula":""
         },
         {
             "symbol":"см",
             "name":"сантиметр",
-            "stringToSI":"x*0.01",
-            "stringFromSI":""
+            "defaultUnitFormula":"x*0.01",
+            "currentUnitFormula":""
         },
         {
             "symbol":"мм",
             "name":"миллиметр",
-            "stringToSI":"",
-            "stringFromSI":"x*1000"
+            "defaultUnitFormula":"",
+            "currentUnitFormula":"x*1000"
         },
         {
             "symbol":"\"",
             "name":"дюйм",
-            "stringToSI":"x*0.0254",
-            "stringFromSI":""
+            "defaultUnitFormula":"x*0.0254",
+            "currentUnitFormula":""
         },
         {
             "symbol":"ft",
             "name":"фут",
-            "stringToSI":"x*0.3048",
-            "stringFromSI":""
+            "defaultUnitFormula":"x*0.3048",
+            "currentUnitFormula":""
         },
         {
             "symbol":"mi",
             "name":"миля",
-            "stringToSI":"x*1609.344",
-            "stringFromSI":""
+            "defaultUnitFormula":"x*1609.344",
+            "currentUnitFormula":""
         },
         {
             "symbol":"yd",
             "name":"ярд",
-            "stringToSI":"x*0.9144",
-            "stringFromSI":""
+            "defaultUnitFormula":"x*0.9144",
+            "currentUnitFormula":""
         },
         {
             "symbol":"локоть",
             "name":"локоть",
-            "stringToSI":"x*0.45",
-            "stringFromSI":""
+            "defaultUnitFormula":"x*0.45",
+            "currentUnitFormula":""
         }
     ]
 }

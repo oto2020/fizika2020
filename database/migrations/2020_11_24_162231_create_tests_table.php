@@ -17,11 +17,10 @@ class CreateTestsTable extends Migration
 
             $table->bigIncrements('id')->unsigned();
             $table->foreignId('lesson_id')->references('id')->on('lessons');
+            $table->foreignId('user_id')->references('id')->on('users');
 
             $table->string('name');
-            $table->string('preview_text', 500);
-
-            $table->string('user');
+            $table->string('preview_text', 500)->nullable();
 
             $table->string('uri');
             $table->string('full_uri');
@@ -38,6 +37,6 @@ class CreateTestsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tests');
+        Schema::dropIfExists('test1_tests');
     }
 }

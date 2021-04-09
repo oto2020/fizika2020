@@ -6,10 +6,11 @@
             </button>
             <div class="dropdown-menu">
                 <a v-for="(calc, i) in calculators" @click="selectCalculator(i)" class="dropdown-item"
-                   href="#">{{ calc.name }}</a>
+                   href="#">{{ calc.name }}
+                </a>
             </div>
         </div>
-
+<!--        SI: "{{calculators[index].defaultUnitName}}" ({{calculators[index].defaultUnitSymbol}})-->
         <div class="row mt-4">
             <div class="col" v-for="(column, columnIndex) in columns">
                 <label>Введите значение:</label>
@@ -54,14 +55,38 @@
 <script>
 
 export default {
+    // получаем из контроллера
     props: ['calculators'],
+    // данные приложения, структуру которых определяем мы
     data: function () {
         return {
-            index: 0, // текущий выбранный элемент выпадающего списка
-            units: this.calculators[0].units, // юниты (единицы измерения) текущего выбранного калькулятора
-            emptyColumn: {selectedUnitIndex: 0, value: 1.0, value10: {part1: 1, part2: 0, stepen10: 0}, inputError: ''},
-            columns: [ // сколько объектов в этом массиве, столько и списков будет создано. в каждом списке по умолчанию выбраны самые первые юниты
-                Object.assign({}, this.emptyColumn), Object.assign({}, this.emptyColumn),
+            // текущий выбранный элемент выпадающего списка
+            index: 0,
+
+            // [из json-файлов] юниты (единицы измерения) текущего выбранного калькулятора
+            units: this.calculators[0].unitsOfMeasurement,
+
+            // образец пустого столбца
+            emptyColumn: {
+                // выбранная строка, по умолчанию выбрана первая строка
+                selectedUnitIndex: 0,
+                // стартовое значение поля
+                value: 1.0,
+                // единица измерения в системе SI
+                value10: {
+                    part1: 1, // целая часть
+                    part2: 0, // после запятой
+                    stepen10: 0
+                },
+                // возникшая ошибка при вводе
+                inputError: ''
+            },
+
+            // [для построения HTML-содержимого страницы] массив, в зависимости от которого происходит построение DOM столбцов
+            // Изначально этот массив содержит два пустых столбца
+            columns: [
+                Object.assign({}, this.emptyColumn), // Object.assign(,) позволяет копировать объект вместе с его содержимым,
+                Object.assign({}, this.emptyColumn), // а не просто получать ссылку на него. Используется дял получения независимых копий столбцов
             ],
         }
     },
@@ -71,11 +96,13 @@ export default {
             this.columns.push(Object.assign({}, this.emptyColumn));
             this.convertFromThisColumn(0);
         },
+
         // удаление столбца
         deleteColumn() {
             if (this.columns.length > 2)
             this.columns.pop();
         },
+
         // Выбор калькулятора из выпадающего списка по индексу i
         selectCalculator(index) {
             //if (this.index === i) return;
@@ -85,22 +112,21 @@ export default {
 
             // обновляем список текущих единиц измерения
             this.units = null;
-            this.units = this.calculators[this.index].units;
+            this.units = this.calculators[this.index].unitsOfMeasurement;
 
             // при переключении калькулятора будут 2 столбца, в котором будут выбраны первые строки
-            this. columns = [
-                Object.assign({}, this.emptyColumn), Object.assign({}, this.emptyColumn),
+            this.columns = [
+                Object.assign({}, this.emptyColumn),
+                Object.assign({}, this.emptyColumn),
             ];
-
 
             // пробежимся по юнитам и сформируем тело обратным функциям
             for (let i = 0; i < this.units.length; i++) {
-                if (this.units[i].stringFromSI === "")
-                    this.units[i].stringFromSI = getReverseFunctionString(this.units[i].stringToSI);
-                if (this.units[i].stringToSI === "")
-                    this.units[i].stringToSI = getReverseFunctionString(this.units[i].stringFromSI);
+                if (this.units[i].defaultUnitFormula === "")
+                    this.units[i].defaultUnitFormula = getReverseFunctionString(this.units[i].currentUnitFormula);
+                if (this.units[i].currentUnitFormula === "")
+                    this.units[i].currentUnitFormula = getReverseFunctionString(this.units[i].defaultUnitFormula);
             }
-
             console.log('Переключил на: ' + this.calculators[this.index].name);
         },
 
@@ -108,7 +134,7 @@ export default {
         selectUnit(unitRowIndex, columnIndex) {
             console.log('В столбце [' + columnIndex + '] выбрана строка [' + unitRowIndex + ']');
 
-            // записываем активный юнит-строку столбца columnIndex
+            // текущий столбец запоминает строку(единицу измерения (юнит)), которая в нём выбрана
             this.columns[columnIndex].selectedUnitIndex = unitRowIndex;
 
             // вызываем конвертацию из другого столбца, но только не из этого
@@ -116,7 +142,6 @@ export default {
             this.convertFromThisColumn(tempColumn);
 
         },
-
 
         // если всё ок, то возвращается пустой inputError
         validateInput(value) {
@@ -141,6 +166,7 @@ export default {
             return inputError;
         },
 
+        // проверка на isNaN, для предоствращения жизненных трудностей
         isNaN(value) {
             return value !== value;
         },
@@ -152,7 +178,7 @@ export default {
 
             if (this.isNaN(parseFloat(value))) {
                 console.log('Предотвращение NaN 1');
-                value = 0;
+                value = 1;
             }
 
             // ВАЛИДАЦИЯ
@@ -164,50 +190,50 @@ export default {
             // вытащим текущий активный юнит-строку столбца
             let unitRowIndex = this.columns[columnIndex].selectedUnitIndex;
 
-            // определим функцию перевода в SI
-            let convertToSI = new Function("x", "return parseFloat(" + this.units[unitRowIndex].stringToSI + ");");
+            // определим функцию перевода в единицу измерения по умолчанию
+            let convertToDefault = new Function("x", "return parseFloat(" + this.units[unitRowIndex].defaultUnitFormula + ");");
 
-            // Переводим изменённое значение в SI:
-            let valueSI = convertToSI(value);
-            console.log('Получено значение в системе SI: ' + valueSI + ' ' + this.calculators[this.index].symbolSI);
-            if (this.isNaN(valueSI)) {
+            // Переводим изменённое значение ТЕКУЩЕГО СТОЛБЦА в ед. изм. по умолчанию:
+            let defaultValue = convertToDefault(value);
+
+            if (this.isNaN(defaultValue)) {
                 console.log('Предотвращение NaN 2');
-                this.columns[columnIndex].value = 0;
+                this.columns[columnIndex].value = 1;
             }
 
-            // Пробежимся по всем столбцам кроме текущего и ПЕРЕВЕДЁМ funcFromSI
+            // Пробежимся по всем столбцам кроме текущего и ПЕРЕВЕДЁМ convertToCurrent
             for (let i = 0; i < this.columns.length; i++) {
                 // текущий столбец не трогаем
                 if (i === columnIndex) continue;
 
-                // какая строка-юнит выбрана в текущем перебираемом столбце
+                // какая единица измерения (строка-юнит) выбрана в текущем перебираемом столбце
                 let selectedUnitIndex = this.columns[i].selectedUnitIndex;
 
-                // вытащим из юнита, выбранного в этом столбце: функцию перевода на основании stringFromSI
-                let convertFromSI = new Function("x", "return parseFloat(" + this.units[selectedUnitIndex].stringFromSI + ");");
+                // вытащим из юнита, выбранного в этом столбце: функцию перевода на основании currentUnitFormula
+                let convertToCurrent = new Function("x", "return parseFloat(" + this.units[selectedUnitIndex].currentUnitFormula + ");");
 
                 // переводим funcFromSI в текущую единицу измерения текущего столбца
-                this.columns[i].value = convertFromSI(valueSI);
+                this.columns[i].value = convertToCurrent(defaultValue);
 
                 // ---ДОПОЛНИТЕЛЬНО ПОСЛЕ КОНВЕРТАЦИИ---
                 // обновляем стандартный вид числа для сконвентированного выражения
                 this.columns[i].value10 = this.getValue10(this.columns[i].value);
 
                 // когда JS будет переводить наши числа в свой e+21 формат -- мы будем переводить это число к обратному виду в форме строки
-                if (this.columns[i].value10.stepen10 > 20 || this.columns[i].value10.stepen10 < -6)
+                if (this.columns[i].value10.stepen10 > 20 || this.columns[i].value10.stepen10 < -6) // сие случается, когда порядок числа переваливает за 20 и -6
                     this.columns[i].value = this.eNumberToNormalNumberLongString(this.columns[i].value);
 
             }
         },
 
-        // переводит 0.0039 => 3.9 * 10 ^ -3
+        // переводит 0.0039 => 3.9 * 10 ^ -3. Для спец. отображения в системе SI
         getValue10(value) {
             let isNegative = false;
             if (value < 0) {
                 isNegative = true;
                 value = value * (-1);
             }
-            // число знаков после запятой:
+            // КОНСТАНТА, сколько знаков после запятой выводятся:
             let ostatokCount = 3;
 
             // текущее значение явно преобразуем в число
@@ -221,14 +247,16 @@ export default {
             };
 
             // формирует результат, приводя число к виду трёх знаков после запятой
+            // standartValue - число с плавающей запятой типа 1,25
+            // stepen10 - это положительная или отрицательная степень 10-ти
             function setResult(standartValue, stepen10) {
-                // округляем до ostatokCount знаков после запятой
+                // округляем число с плавающей запятой до ostatokCount знаков после запятой
                 standartValue = standartValue.toFixed(ostatokCount);
 
                 // целая часть числа
                 result.part1 = Math.trunc(standartValue);
 
-                // преобразуем то, что после запятой: получим в текстовом виде c фиксом до ostatokCount знаков после запятой, без нулей в конце
+                // то, что после запятой: получим в текстовом виде c фиксом до ostatokCount знаков после запятой, без нулей в конце
                 let ostatokString = (standartValue - result.part1).toFixed(ostatokCount) * 1;
                 result.part2 = ostatokString.toString().replace(/0\./, ''); // убрали 0.
 
@@ -237,14 +265,18 @@ export default {
 
                 // не забудем вернуть минус, если число было отрицательным
                 if (isNegative) result.part1 *= (-1);
+
+                // костыль для 99999999999 и 0.9999999999999. При округлении part1 становится 10
+                if (result.part1 === 10) {
+                    result.part1 = 1; result.stepen10 = result.stepen10 + 1;
+                }
             }
 
+            // РАССМОТРИМ ТРИ СЛУЧАЯ:
             // число не нужно приводить к стандартному виду, только округлить
             if (value >= 1 && value < 10 || value === 0) {
                 // число приводится к стандартному виду, а степень 10 устанавливается как 0
                 setResult(value, 0);
-                // console.log('standartValue: ' + value);
-                return result;
             }
             // если значение меньше 1, значит нам нужно будет умножать на 10 пока значение на станет >= 1 и < 10
             if (value < 1) {
@@ -259,10 +291,9 @@ export default {
                         break;
                     }
                 }
-                console.log('standartValue: ' + standartValue);
+                console.log('standartValue меньше 1: ' + standartValue);
                 // число приводится к стандартному виду, а степень 10 устанавливается как counter
                 setResult(standartValue, -counter);
-                return result;
             }
             // если значение больше или равно 10, значит нам нужно будет делить на 10 пока значение на станет >= 1 и < 10
             if (value >= 10) {
@@ -281,8 +312,10 @@ export default {
                 console.log('standartValue: ' + standartValue);
                 // число приводится к стандартному виду, а степень 10 устанавливается как counter
                 setResult(standartValue, counter);
-                return result;
             }
+
+            // возвращаем заданный и нормированный функцией setResult результат
+            return result;
         },
 
         // переводит число 3.9e-7 в строку '0.00000039'. Это нужно для того, чтобы избавиться от тотбражения в виде 3.9e-7
@@ -327,28 +360,11 @@ export default {
             console.log('resultString: ' + resultString);
             return resultString;
         },
-
-
-
 },
 mounted()
 {
+    // после монтирования
     this.selectCalculator(this.index);
-
-    // Хитро подключаем нашу бибилиотеку
-
-    console.log(infixToPostfix("x ^ y / (5 * z) + 10"));
-
-
-    // var script = document.createElement('script');
-    // script.src = "/js/myLib.js";
-    // document.getElementsByTagName('head')[0].appendChild(script);
-
-    // let myLib = document.createElement('script');
-    // document.head.appendChild(myLib);
-    // myLib.helloWorld();
-
-
 }
 
 }

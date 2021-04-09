@@ -1,20 +1,17 @@
 {
     "name":"Вес и масса",
-    "symbolSI":"гр",
-    "nameSI":"грамм",
-    "units":[
+    "unitsOfMeasurement":[
         {
             "symbol":"гр",
             "name":"грамм",
-            "stringToSI":"x",
-            "stringFromSI":""
+            "defaultUnitFormula":"x",
+            "currentUnitFormula":""
         },
         {
             "symbol":"кг",
             "name":"килограмм",
-            "stringToSI":"x*1000",
-            "stringFromSI":""
+            "defaultUnitFormula":"x*1000",
+            "currentUnitFormula":""
         }
-
     ]
 }

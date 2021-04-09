@@ -13,7 +13,7 @@ class CreateAnswersTable extends Migration
      */
     public function up()
     {
-        Schema::create('answers', function (Blueprint $table) {
+        Schema::create('test_answers', function (Blueprint $table) {
             $table->bigIncrements('id')->unsigned();
             $table->foreignId('question_id')->references('id')->on('questions');
 
@@ -31,6 +31,6 @@ class CreateAnswersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('answers');
+        Schema::dropIfExists('test_answers');
     }
 }

@@ -15,9 +15,11 @@ class CreateSectionsTable extends Migration
     {
         Schema::create('sections', function (Blueprint $table) {
             $table->bigIncrements('id')->unsigned();
-            $table->foreignId('school_id')->references('id')->on('schools');
+            //$table->foreignId('school_id')->references('id')->on('schools');
+
             $table->string('name', 50);
             $table->string('uri', 50);
+
             $table->timestamps();
         });
     }

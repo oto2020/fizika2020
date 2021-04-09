@@ -1,31 +1,29 @@
 {
     "name":"Температура",
-    "symbolSI":"°С",
-    "nameSI":"градус Цельсия",
-    "units":[
+    "unitsOfMeasurement":[
         {
             "symbol":"°C",
             "name":"градус Цельсия",
-            "stringToSI":"x",
-            "stringFromSI":""
+            "defaultUnitFormula":"x",
+            "currentUnitFormula":"x"
         },
         {
             "symbol":"°K",
             "name":"градус Кельвина",
-            "stringToSI":"x - 273.15",
-            "stringFromSI":""
+            "defaultUnitFormula":"x - 273.15",
+            "currentUnitFormula":"x + 273.15"
         },
         {
             "symbol":"°F",
             "name":"градус Фаренгейта",
-            "stringToSI":"(x-32)*5/9",
-            "stringFromSI":""
+            "defaultUnitFormula":"(x - 32) * 5 / 9",
+            "currentUnitFormula":"x * 9 / 5 + 32"
         },
         {
             "symbol":"°Ra",
             "name":"градус Ранкина",
-            "stringToSI":"(x-491.67)/1.8",
-            "stringFromSI":"x*1.8+491.67"
+            "defaultUnitFormula":"(x - 491.67) / 1.8",
+            "currentUnitFormula":"x * 1.8 + 491.67"
         }
     ]
 }

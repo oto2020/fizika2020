@@ -13,7 +13,7 @@ class CreateQuestionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('questions', function (Blueprint $table) {
+        Schema::create('test_questions', function (Blueprint $table) {
 
             $table->bigIncrements('id')->unsigned();
             $table->foreignId('test_id')->references('id')->on('tests');
@@ -31,6 +31,6 @@ class CreateQuestionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('questions');
+        Schema::dropIfExists('test_questions');
     }
 }

@@ -17,8 +17,10 @@ class CreateLessonCommentsTable extends Migration
             $table->bigIncrements('id')->unsigned();
             $table->foreignId('user_id')->references('id')->on('users');
             $table->foreignId('lesson_id')->references('id')->on('lessons');
+
             $table->string('content');
             $table->dateTime('datetime');
+
             $table->timestamps();
         });
     }

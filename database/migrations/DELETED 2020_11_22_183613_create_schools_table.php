@@ -13,14 +13,14 @@ class CreateSchoolsTable extends Migration
      */
     public function up()
     {
-        Schema::create('schools', function (Blueprint $table) {
-            $table->bigIncrements('id')->unsigned();
-            $table->string('name');
-            $table->string('uri');
-            $table->string('full_name');
-            $table->string('geo_address');
-            $table->timestamps();
-        });
+//        Schema::create('schools', function (Blueprint $table) {
+//            $table->bigIncrements('id')->unsigned();
+//            $table->string('name');
+//            $table->string('uri');
+//            $table->string('full_name');
+//            $table->string('geo_address');
+//            $table->timestamps();
+//        });
     }
 
     /**
