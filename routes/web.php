@@ -21,14 +21,18 @@ Route::get('/logout', 'Auth\LoginController@logout');
 
 
 Route::get('/', function () {
-    return redirect('/school0/main');
+    return redirect('/school0');
 });
+
 
 // Калькулятор
 Route::get('/calc', 'CalcController@calcPage');
 
-// Главная страница
-Route::get('/{schoolUri}/main', 'SchoolController@showMainpage')->name('mainpage');
+// Главная страница школы
+Route::get('/{schoolUri}', 'SchoolController@showMainPage');
+// Редактирование html-содержимого на главной странице школы
+Route::get('/{schoolUri}/edit_main_page', 'SchoolController@editMainPage');
+
 
 // страница с каким-либо разделом (Например: 7 класс)
 Route::get('/{schoolUri}/{sectionUri}', 'SectionController@showSectionPage');

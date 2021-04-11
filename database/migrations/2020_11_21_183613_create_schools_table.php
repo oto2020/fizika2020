@@ -17,6 +17,7 @@ class CreateSchoolsTable extends Migration
             $table->bigIncrements('id')->unsigned();
 
             $table->string('name');           // Название школы, например: "МБОУ СОШ № 31"
+            $table->longText('content');      // html-содержимое Главной страницы
             $table->string('full_name');      // Полное название школы (юридическое наименование)
             $table->string('uri')->unique();  // Составная часть адреса, например: school31
             $table->string('geo_address');    // Географический адрес школы

@@ -17,6 +17,7 @@ class SchoolsSeeder extends Seeder
                 'id' => 1,
                 'name' => 'Базовая школа',
                 'uri' => 'school0',
+                'content' => '<div class="border border-primary"> html-содержимое школы<br><br><br><br><br><br><br></div>',
                 'full_name' => 'Базовая школа. Содержит базовый курс физики для домашнего обучения учеников без привязки к какой-либо школе. От базовой школы наследуются остальные школы.',
                 'geo_address' => 'г. Симферополь, проспект Вернадского, 4',
                 'created_at' => now(),

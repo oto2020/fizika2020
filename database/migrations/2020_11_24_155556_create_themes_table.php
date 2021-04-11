@@ -16,9 +16,9 @@ class CreateThemesTable extends Migration
         Schema::create('themes', function (Blueprint $table) {
             $table->bigIncrements('id')->unsigned();
 
-            $table->string('name');                                 // название Раздела физики (темы)
-            $table->string('previewText', 500)->nullable();  // описание Раздела физики (темы)
-            $table->string('uri')->unique();                         // составная часть url
+            $table->string('name');                                  // название Раздела физики (темы)
+            $table->string('preview_text', 500)->nullable();  // описание Раздела физики (темы)
+            $table->string('uri')->unique();                          // составная часть url
 
             $table->timestamps();
         });

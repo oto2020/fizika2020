@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class UserRole extends Model
@@ -19,4 +20,5 @@ class UserRole extends Model
         }
         return $role;
     }
+
 }

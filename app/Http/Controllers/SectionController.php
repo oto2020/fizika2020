@@ -28,16 +28,10 @@ class SectionController extends Controller
         // Текущий раздел по id школы и uri раздела
         $section = Section::getCurrentSection($school->id, $sectionUri);
         dd($section);
-//        // получим пользователя и его роль
-//        $user = Auth::user();
-//        $role = $this->getRole($user);
-//
-//        // ДЛЯ ВЕРХНЕГО МЕНЮ -- СПИСОК РАЗДЕЛОВ (ГЛАВНАЯ, 7 КЛАСС, 8 КЛАСС И ТД,)
-//        $sections = $this->getSections();
-//        // Текущий раздел
-//        $section = $this->getSection($sectionURL);
+
 //        // Уроки текущего раздела
 //        $lessons = $this->getLessons($section->id);
+
 //        if ($sectionURL == 'main') {
 //            // КОНТЕНТ Главной страницы
 //            $lesson = $this->getLesson('glavnaya-stranica');

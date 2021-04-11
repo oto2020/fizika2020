@@ -30,6 +30,8 @@
 {{--    TODO: добавить условие на calc--}}
     <script src="/js/myPolishNotation.js"></script>
     <script src="/js/myReverseFunction.js"></script>
+
+    <script src="/storage/ckeditor/ckeditor.js"></script>
 {{--    <link href="{{ asset('/css/bootstrap.css') }}" rel="stylesheet">--}}
 {{--    <link href="{{ asset('/css/main.css')}}" rel="stylesheet" type="text/css">--}}
 
@@ -79,6 +81,11 @@
 <div class="footer">КФУ им. В.И. Вернадского, Симферополь, 2020</div>
 <!-- Scripts -->
 <script src="{{ asset('js/app.js') }}"></script>
+<script>
+    CKEDITOR.config.allowedContent = true;
+    CKEDITOR.replace( 'html_content', {height: 600});
+</script>
+
 </body>
 </html>
 
