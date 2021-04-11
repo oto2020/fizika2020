@@ -5,7 +5,7 @@
             <!--СПИСОК ССЫЛОК В ВЕРХНРЕМ МЕНЮ-->
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="/home">Главная</a>
+                    <a class="nav-link" v-bind:href="mainPageUri">Главная</a>
                 </li>
                 <li v-for="section in this.sections" class="nav-item">
                     <a class="nav-link" v-bind:href="section.uri">{{section.name}}</a>
@@ -23,7 +23,7 @@
 
                     <!--ИМЯ ПОЛЬЗОВАТЕЛЯ + РОЛЬ-->
                     <div v-on:mouseenter="userMouseEnter" v-on:mouseleave="userMouseLeave" class="col-auto text-white pl-0">
-                        <h5> {{this.user.name}} </h5>
+                        <h5> {{user.name}} </h5>
                         <h6 v-html="underText"></h6>
                     </div>
 
@@ -73,7 +73,7 @@
             <div v-show="isVisibleList" class="row top-navbar navbar navbar-expand-lg navbar-dark bg-dark">
                 <ul class="navbar-nav mr-auto pl-3">
                     <li class="nav-item">
-                        <a class="nav-link" href="/main">Главная</a>
+                        <a class="nav-link" v-bind:href="mainPageUri">Главная</a>
                     </li>
                     <li v-for="section in this.sections" class="nav-item">
                         <a class="nav-link" v-bind:href=section.uri>{{section.name}}</a>
@@ -101,6 +101,8 @@
                 logoutButtonSrc: '/storage/img/main/exit_button.png',
                 // будет ли список отображаться (в мобильной версии)
                 isVisibleList: false,
+                // uri главной страницы той школы, к которой принадлежит пользователь
+                mainPageUri: this.school!==null ? '/' + this.school.uri + '/main' : 'school0/main',
             }
         },
         methods: {

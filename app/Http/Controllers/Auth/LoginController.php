@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Logging;
 use App\Providers\RouteServiceProvider;
+use App\School;
+use App\User;
+use App\UserRole;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -43,30 +47,27 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-//        $this->mylog('info', 'Попытка войти в систему под email: ' . $request->email);
+        Logging::mylog('info', 'Попытка войти в систему под email: ' . $request->email);
         session(['login_email' => $request->email]);
-        if (Auth::attempt(['email'=>$request->email, 'password'=>$request->password], ($request->remember == 'on'))) {
+        if (Auth::attempt(['email'=>$request->email, 'password'=>$request->password], ($request->remember == 'on')))
+        {
             // Аутентификация успешна...
-            // Получим роль пользователя:
-            try {
-                $role = DB::table('user_roles')
-                    ->select('id', 'name', 'description')
-                    ->where('id', '=', Auth::user()->user_role_id)
-                    ->get()[0];
-            }
-            catch(\Exception $e) {
-                dd('Не удалось определить роль пользователя. Обратитесь к администратору!');
-            }
-//            $this->mylog('info', 'Вошел в систему');
-            return redirect('/home')->with('message', 'Вы вошли в систему как ['.$role->name.']. '.$role->description);
+            Logging::mylog('info', 'Вошел в систему');
+
+            // получим пользователя, его роль и школу
+            $user = User::get();
+            $role = $user!==null ? UserRole::getByUserId($user->id) : null;
+            $school = School::getById($user->school_id);
+
+            return redirect('/'.$school->uri.'/main/')->with('message', 'Школа ['.$school->name.']. Вы вошли в систему как ['.$role->name.']. '.$role->description);
         }
-//        $this->mylog('warning', 'Неправильный логин или пароль. Попытался войти в систему под email: ' . $request->email);
-        return redirect('/login')->with('err_login', 'Неправильный логин или пароль');
+        Logging::mylog('warning', 'Неправильный логин или пароль при введённом email ' . $request->email);
+        return redirect('/login')->with('session_error', 'Неправильный логин или пароль');
     }
 
     public function logout()
     {
-//        $this->mylog('info', 'Вышел из системы');
+        Logging::mylog('info', 'Вышел из системы');
         Auth::logout();
         return redirect()->back()->with('message', 'Вы зачем-то вышли.');
     }

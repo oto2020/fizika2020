@@ -2,29 +2,32 @@
 
 namespace App\Http\Controllers;
 
+use App\School;
+use App\Section;
+use App\User;
+use App\UserRole;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class SectionController extends Controller
 {
-    // Вытягивает из БД разделы сайта
-    protected function getSections()
-    {
-        try {
-            $sections = DB::table('sections')
-                ->select('id', 'name', 'url', 'ico')
-                ->orderBy('id', 'asc')
-                ->get();
-        } catch (\Exception $e) {
-            dd('Не удалось вытянуть из БД разделы сайта. Обратитесь к администратору!', $e->getMessage());
-        }
-        return $sections;
-    }
 
-//    // страница с каким-либо разделом (Например: 7-class)
-//    public function showSectionPage($sectionURL) // где section - это url раздела
-//    {
+
+    // страница с каким-либо разделом (Например: 7-class)
+    public function showSectionPage($schoolUri, $sectionUri) // где section - это url раздела
+    {
+        // получим пользователя, его роль и школу
+        $user = User::get();
+        $role = $user!==null ? UserRole::getByUserId($user->id) : null;
+        $school = School::getByUri($schoolUri);
+
+        // ДЛЯ ВЕРХНЕГО МЕНЮ -- СПИСОК РАЗДЕЛОВ (ГЛАВНАЯ, 7 КЛАСС, 8 КЛАСС И ТД,)
+        $sections = Section::getSectionsBySchoolId($school->id);
+
+        // Текущий раздел по id школы и uri раздела
+        $section = Section::getCurrentSection($school->id, $sectionUri);
+        dd($section);
 //        // получим пользователя и его роль
 //        $user = Auth::user();
 //        $role = $this->getRole($user);
@@ -42,7 +45,7 @@ class SectionController extends Controller
 //            return view('mainpage', compact('sections', 'section', 'lessons', 'lesson', 'user', 'role'));
 //        }
 //        $this->mylog('info', 'Зашел на страницу раздела /' . $sectionURL);
-//        return view('sectionpage', compact('sections', 'section', 'lessons', 'user', 'role'));
-//    }
+        return view('sectionpage', compact('sections', 'section', 'lessons', 'user', 'role'));
+    }
 
 }

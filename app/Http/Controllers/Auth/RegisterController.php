@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Logging;
 use App\Providers\RouteServiceProvider;
 use App\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -64,6 +65,7 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        Logging::mylog('info', 'Регистрация нового пользователя:' . $data['email']);
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],

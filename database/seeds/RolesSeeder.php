@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class RolesSeeder extends Seeder
@@ -24,34 +25,35 @@ class RolesSeeder extends Seeder
             echo $exc->getMessage() . PHP_EOL;
         }
 
+//        try {
+//            DB::table('user_roles')->insert([
+//                'id' => 2,
+//                'name' => 'Администратор школы',
+//                'level' => '80',
+//                'description' => 'Администратор школы: управляет всеми учителями, классами, уроками и другими пользователями своей школы в Панели управления школой.',
+//            ]);
+//        } catch (\Exception $exc) {
+//            echo $exc->getMessage() . PHP_EOL;
+//        }
+
         try {
             DB::table('user_roles')->insert([
                 'id' => 2,
-                'name' => 'Администратор школы',
-                'level' => '80',
-                'description' => 'Администратор школы: управляет всеми учителями, классами, уроками и другими пользователями своей школы в Панели управления школой.',
+                'name' => 'Учитель-администратор',
+                'level' => '60',
+                'description' => 'Учитель-администратор: наполняет контентом уроки и тесты своей школы. Может управлять другими пользователями из своей школы,',
             ]);
         } catch (\Exception $exc) {
             echo $exc->getMessage() . PHP_EOL;
         }
+
 
         try {
             DB::table('user_roles')->insert([
                 'id' => 3,
-                'name' => 'Учитель',
-                'level' => '60',
-                'description' => 'Учитель: может добавлять и редактировать уроки, тесты, контрольные и самостоятельные работы, управляет учениками из своих классов. Составляет план обучения на год в Панели управления классами.',
-            ]);
-        } catch (\Exception $exc) {
-            echo $exc->getMessage() . PHP_EOL;
-        }
-
-        try {
-            DB::table('user_roles')->insert([
-                'id' => 4,
-                'name' => 'Учитель',
-                'level' => '60',
-                'description' => 'Учитель: может добавлять и редактировать уроки, тесты, контрольные и самостоятельные работы, управляет учениками из своих классов. Составляет план обучения на год в Панели управления классами.',
+                'name' => 'Ученик школы',
+                'level' => '40',
+                'description' => 'Ученик школы: изучает уроки, проходит тесты, может оставлять комментарии к урокам.',
             ]);
         } catch (\Exception $exc) {
             echo $exc->getMessage() . PHP_EOL;
@@ -60,20 +62,9 @@ class RolesSeeder extends Seeder
         try {
             DB::table('user_roles')->insert([
                 'id' => 5,
-                'name' => 'Ученик школы',
-                'level' => '40',
-                'description' => 'Ученик школы: проходит индивидуальный План обучения, составленный учителем и наблюдает свой прогресс, может оставлять комментарии',
-            ]);
-        } catch (\Exception $exc) {
-            echo $exc->getMessage() . PHP_EOL;
-        }
-
-        try {
-            DB::table('user_roles')->insert([
-                'id' => 6,
                 'name' => 'Анонимный ученик',
                 'level' => '20',
-                'description' => 'Анонимный ученик: принадлежит сам себе, проходит базовый индивидуальный План обучения и наблюдает свой прогресс.',
+                'description' => 'Анонимный ученик: изучает уроки и тесты базовой программы.',
             ]);
         } catch (\Exception $exc) {
             echo $exc->getMessage() . PHP_EOL;

@@ -15,9 +15,11 @@ class CreateUserRolesTable extends Migration
     {
         Schema::create('user_roles', function (Blueprint $table) {
             $table->bigIncrements('id')->unsigned();
-            $table->string('name');
-            $table->unsignedInteger('level');
-            $table->string('description');
+
+            $table->string('name');             // название роли, например: Учитель, Администратор школы
+            $table->unsignedInteger('level');   // условный "уровень", например: 20, 60, 100
+            $table->string('description');      // текстовое описание роли, за что ответственна
+
             $table->timestamps();
         });
     }

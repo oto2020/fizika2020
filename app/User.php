@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 class User extends Authenticatable
 {
 
+    // возвращает текущего пользователя
     public static function get() {
         return Auth::user();
     }

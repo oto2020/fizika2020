@@ -21,14 +21,26 @@ Route::get('/logout', 'Auth\LoginController@logout');
 
 
 Route::get('/', function () {
-    return redirect('/main');
+    return redirect('/school0/main');
 });
 
 // Калькулятор
 Route::get('/calc', 'CalcController@calcPage');
 
 // Главная страница
-Route::get('/main', 'MainPageController@showMainpage');
+Route::get('/{schoolUri}/main', 'SchoolController@showMainpage')->name('mainpage');
+
+// страница с каким-либо разделом (Например: 7 класс)
+Route::get('/{schoolUri}/{sectionUri}', 'SectionController@showSectionPage');
+
+//// страница с каким-нибудь уроком (Например: 7 класс/ урок 1)
+//Route::get('/{sectionURL}/{lessonURL}', 'HomeController@showLessonPage');
+//
+//// страница с тестом (Например: 7-class/mekhanicheskoe-dvizhenie-tel/test-po-mekhanike)
+//Route::get('/{sectionURL}/{lessonURL}/{testURL}', 'HomeController@showTestPage');
+//Route::post('/{testURL}/verificate_test.php', 'PostController@verificateTest');
+
+
 
 //// Тестовая страница
 //Route::get('/test', 'HomeController@testPage');
@@ -79,15 +91,6 @@ Route::get('/main', 'MainPageController@showMainpage');
 //Route::get('/{sectionURL}/{lessonURL}/{testURL}/mark_as_deleted', 'HomeController@markAsDeletedTest');
 //
 //
-//// страница с каким-либо разделом (Например: 7 класс)
-//Route::get('/{sectionURL}', 'HomeController@showSectionPage');
-//
-//// страница с каким-нибудь уроком (Например: 7 класс/ урок 1)
-//Route::get('/{sectionURL}/{lessonURL}', 'HomeController@showLessonPage');
-//
-//// страница с тестом (Например: 7-class/mekhanicheskoe-dvizhenie-tel/test-po-mekhanike)
-//Route::get('/{sectionURL}/{lessonURL}/{testURL}', 'HomeController@showTestPage');
-//Route::post('/{testURL}/verificate_test.php', 'PostController@verificateTest');
-//
+
 //// обновление аватарки
 //Route::post('/reload_avatar.php', 'PostController@reloadAvatar');

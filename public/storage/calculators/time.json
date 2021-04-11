@@ -1,0 +1,29 @@
+{
+    "name":"Время",
+    "unitsOfMeasurement":[
+        {
+            "symbol":"сек",
+            "name":"секунда",
+            "defaultUnitFormula":"x",
+            "currentUnitFormula":""
+        },
+        {
+            "symbol":"мин",
+            "name":"минута",
+            "defaultUnitFormula":"x*60",
+            "currentUnitFormula":""
+        },
+        {
+            "symbol":"ч",
+            "name":"час",
+            "defaultUnitFormula":"x*60*60",
+            "currentUnitFormula":""
+        },
+        {
+            "symbol":"сут",
+            "name":"сутки",
+            "defaultUnitFormula":"x*60*60*24",
+            "currentUnitFormula":""
+        }
+    ]
+}

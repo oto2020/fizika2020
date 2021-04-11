@@ -27,6 +27,7 @@
 <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
+{{--    TODO: добавить условие на calc--}}
     <script src="/js/myPolishNotation.js"></script>
     <script src="/js/myReverseFunction.js"></script>
 {{--    <link href="{{ asset('/css/bootstrap.css') }}" rel="stylesheet">--}}
@@ -55,9 +56,6 @@
 <div class="wrapper">
     <div class="container" id="app">
         @include('layouts.messages.message')
-        <br>
-        <!--ВЕРХНЕЕ МЕНЮ!-->
-        {{--        @include('layouts.top.menu')--}}
 
         <top_menu
             :sections='@json(isset($sections)?$sections:null)'
@@ -68,6 +66,7 @@
             register-route="{{route('register')}}"
             logout-route="{{route('logout')}}"
         ></top_menu>
+
         <main>
             @yield('content')
         </main>

@@ -2389,7 +2389,9 @@ __webpack_require__.r(__webpack_exports__);
       // путь к изображению кнопки выхода
       logoutButtonSrc: '/storage/img/main/exit_button.png',
       // будет ли список отображаться (в мобильной версии)
-      isVisibleList: false
+      isVisibleList: false,
+      // uri главной страницы той школы, к которой принадлежит пользователь
+      mainPageUri: this.school !== null ? '/' + this.school.uri + '/main' : 'school0/main'
     };
   },
   methods: {
@@ -38275,7 +38277,16 @@ var render = function() {
               "ul",
               { staticClass: "navbar-nav mr-auto" },
               [
-                _vm._m(0),
+                _c("li", { staticClass: "nav-item" }, [
+                  _c(
+                    "a",
+                    {
+                      staticClass: "nav-link",
+                      attrs: { href: _vm.mainPageUri }
+                    },
+                    [_vm._v("Главная")]
+                  )
+                ]),
                 _vm._v(" "),
                 _vm._l(this.sections, function(section) {
                   return _c("li", { staticClass: "nav-item" }, [
@@ -38320,7 +38331,7 @@ var render = function() {
                         }
                       },
                       [
-                        _c("h5", [_vm._v(" " + _vm._s(this.user.name) + " ")]),
+                        _c("h5", [_vm._v(" " + _vm._s(_vm.user.name) + " ")]),
                         _vm._v(" "),
                         _c("h6", {
                           domProps: { innerHTML: _vm._s(_vm.underText) }
@@ -38463,7 +38474,16 @@ var render = function() {
                 "ul",
                 { staticClass: "navbar-nav mr-auto pl-3" },
                 [
-                  _vm._m(1),
+                  _c("li", { staticClass: "nav-item" }, [
+                    _c(
+                      "a",
+                      {
+                        staticClass: "nav-link",
+                        attrs: { href: _vm.mainPageUri }
+                      },
+                      [_vm._v("Главная")]
+                    )
+                  ]),
                   _vm._v(" "),
                   _vm._l(this.sections, function(section) {
                     return _c("li", { staticClass: "nav-item" }, [
@@ -38485,28 +38505,7 @@ var render = function() {
         ])
       ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("li", { staticClass: "nav-item" }, [
-      _c("a", { staticClass: "nav-link", attrs: { href: "/home" } }, [
-        _vm._v("Главная")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("li", { staticClass: "nav-item" }, [
-      _c("a", { staticClass: "nav-link", attrs: { href: "/main" } }, [
-        _vm._v("Главная")
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -51152,8 +51151,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\igo4ek\PhpstormProjects\fizika2020\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\igo4ek\PhpstormProjects\fizika2020\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\laragon_full\www\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\laragon_full\www\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

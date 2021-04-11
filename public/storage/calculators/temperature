@@ -1,0 +1,29 @@
+{
+    "name":"Температура",
+    "unitsOfMeasurement":[
+        {
+            "symbol":"°C",
+            "name":"градус Цельсия",
+            "defaultUnitFormula":"x",
+            "currentUnitFormula":"x"
+        },
+        {
+            "symbol":"°K",
+            "name":"градус Кельвина",
+            "defaultUnitFormula":"x - 273.15",
+            "currentUnitFormula":"x + 273.15"
+        },
+        {
+            "symbol":"°F",
+            "name":"градус Фаренгейта",
+            "defaultUnitFormula":"(x - 32) * 5 / 9",
+            "currentUnitFormula":"x * 9 / 5 + 32"
+        },
+        {
+            "symbol":"°Ra",
+            "name":"градус Ранкина",
+            "defaultUnitFormula":"(x - 491.67) / 1.8",
+            "currentUnitFormula":"x * 1.8 + 491.67"
+        }
+    ]
+}

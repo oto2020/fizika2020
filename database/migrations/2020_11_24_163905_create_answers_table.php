@@ -15,10 +15,10 @@ class CreateAnswersTable extends Migration
     {
         Schema::create('test_answers', function (Blueprint $table) {
             $table->bigIncrements('id')->unsigned();
-            $table->foreignId('question_id')->references('id')->on('questions');
+            $table->foreignId('question_id')->references('id')->on('test_questions');  // к какому вопросу относится вариант ответа
 
-            $table->string('name');
-            $table->boolean('is_valid');
+            $table->string('name');         // содержимое варианта ответа
+            $table->boolean('is_valid');    // является ли вариант ответа правильным
 
             $table->timestamps();
         });

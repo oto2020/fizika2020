@@ -16,9 +16,9 @@ class CreateQuestionsTable extends Migration
         Schema::create('test_questions', function (Blueprint $table) {
 
             $table->bigIncrements('id')->unsigned();
-            $table->foreignId('test_id')->references('id')->on('tests');
+            $table->foreignId('test_id')->references('id')->on('tests'); // к какому тесту относится вопрос
 
-            $table->string('name', 500);
+            $table->string('name', 500);    // текст вопроса
 
             $table->timestamps();
         });

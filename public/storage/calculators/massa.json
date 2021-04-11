@@ -1,0 +1,17 @@
+{
+    "name":"Вес и масса",
+    "unitsOfMeasurement":[
+        {
+            "symbol":"гр",
+            "name":"грамм",
+            "defaultUnitFormula":"x",
+            "currentUnitFormula":""
+        },
+        {
+            "symbol":"кг",
+            "name":"килограмм",
+            "defaultUnitFormula":"x*1000",
+            "currentUnitFormula":""
+        }
+    ]
+}

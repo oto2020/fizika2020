@@ -16,16 +16,15 @@ class CreateTestsTable extends Migration
         Schema::create('tests', function (Blueprint $table) {
 
             $table->bigIncrements('id')->unsigned();
-            $table->foreignId('lesson_id')->references('id')->on('lessons');
-            $table->foreignId('user_id')->references('id')->on('users');
+            $table->foreignId('lesson_id')->references('id')->on('lessons');    // к какому уроку относится тест
+            $table->foreignId('author_id')->references('id')->on('users');      // автор теста
 
-            $table->string('name');
-            $table->string('preview_text', 500)->nullable();
+            $table->string('name');                                     // название теста
+            $table->string('preview_text', 500)->nullable();     // превью, о чем тест
+            $table->string('uri');                                      // составная часть url теста
 
-            $table->string('uri');
-            $table->string('full_uri');
+            $table->boolean('is_deleted')->default(false);      // пометка "удалено"
 
-            $table->boolean('is_deleted')->default(false);
             $table->timestamps();
         });
     }

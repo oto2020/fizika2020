@@ -12,12 +12,14 @@ class CalcController extends Controller
     {
         // массив с путями к JSON-содержимому
         $calculatorsPath = Storage::allFiles('public/calculators');
+
         // массив с содержимым
         $calculators=[];
         foreach($calculatorsPath as $path)
         {
             $calculators[]= json_decode(Storage::get($path)); // dd($units);
         }
+
         return view('calcpage', compact('calculators'));
     }
 

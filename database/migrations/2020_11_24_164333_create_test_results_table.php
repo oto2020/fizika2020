@@ -17,13 +17,11 @@ class CreateTestResultsTable extends Migration
 
             $table->bigIncrements('id')->unsigned();
 
-            $table->foreignId('test_id')->references('id')->on('tests');
-            $table->foreignId('user_id')->references('id')->on('users');
+            $table->foreignId('test_id')->references('id')->on('tests'); // тест
+            $table->foreignId('user_id')->references('id')->on('users'); // пользователь, который проходил тест
 
-            $table->dateTime('datetime');
-            $table->string('user_name');
-            $table->unsignedInteger('point');
-            $table->longText('details');
+            $table->unsignedInteger('point'); // результат прохождения теста (в %)
+            $table->longText('details');      // детальная информация о пройденном тесте
 
             $table->timestamps();
         });

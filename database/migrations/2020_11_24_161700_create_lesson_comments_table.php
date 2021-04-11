@@ -15,11 +15,11 @@ class CreateLessonCommentsTable extends Migration
     {
         Schema::create('lesson_comments', function (Blueprint $table) {
             $table->bigIncrements('id')->unsigned();
-            $table->foreignId('user_id')->references('id')->on('users');
-            $table->foreignId('lesson_id')->references('id')->on('lessons');
+            $table->foreignId('user_id')->references('id')->on('users');    // пользователь, автор комментария
+            $table->foreignId('lesson_id')->references('id')->on('lessons');// к какому уроку относится комментарий
 
-            $table->string('content');
-            $table->dateTime('datetime');
+            $table->string('content');  // текст комментария
+            //$table->dateTime('datetime');
 
             $table->timestamps();
         });
