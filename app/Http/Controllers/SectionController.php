@@ -31,7 +31,7 @@ class SectionController extends Controller
 
         // Уроки текущего раздела
         $lessons = Lesson::getLessonsInfo($section->id);
-
+        dump($section->id);
         dd($lessons);
 
 //        // Уроки текущего раздела
