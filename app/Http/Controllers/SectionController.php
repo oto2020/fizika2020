@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Lesson;
 use App\School;
 use App\Section;
 use App\User;
@@ -27,7 +28,11 @@ class SectionController extends Controller
 
         // Текущий раздел по id школы и uri раздела
         $section = Section::getCurrentSection($school->id, $sectionUri);
-        dd($section);
+
+        // Уроки текущего раздела
+        $lessons = Lesson::getLessonsInfo($section->id);
+
+        dd($lessons);
 
 //        // Уроки текущего раздела
 //        $lessons = $this->getLessons($section->id);
