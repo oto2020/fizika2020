@@ -19,7 +19,7 @@ class SectionController extends Controller
     {
         // получим пользователя, его роль и школу
         $user = User::get();
-        $role = $user!==null ? UserRole::getByUserId($user->id) : null;
+        $role = $user!==null ? UserRole::getById($user->user_role_id) : null;
         $school = School::getByUri($schoolUri);
 
         // ДЛЯ ВЕРХНЕГО МЕНЮ -- СПИСОК РАЗДЕЛОВ (ГЛАВНАЯ, 7 КЛАСС, 8 КЛАСС И ТД,)

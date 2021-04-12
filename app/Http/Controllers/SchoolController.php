@@ -11,6 +11,7 @@ use App\Themes;
 use App\User;
 use App\UserRole;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SchoolController extends Controller
 {
@@ -19,7 +20,7 @@ class SchoolController extends Controller
     {
         // получим пользователя, его роль, школу и класс
         $user = User::get();
-        $role = $user!==null ? UserRole::getByUserId($user->id) : null;
+        $role = $user!==null ? UserRole::getById($user->user_role_id) : null;
         $school = School::getByUri($schoolUri);
         $class = $user!==null ? SchoolClass::getById($user->school_class_id) : null;
 
@@ -37,7 +38,7 @@ class SchoolController extends Controller
     {
         // получим пользователя, его роль, школу и класс
         $user = User::get();
-        $role = $user!==null ? UserRole::getByUserId($user->id) : null;
+        $role = $user!==null ? UserRole::getById($user->user_role_id) : null;
         $school = School::getByUri($schoolUri);
 
         if ($user == null || $role->level < 60) {
@@ -47,4 +48,29 @@ class SchoolController extends Controller
         Logging::mylog('warning', 'Зашел на страницу редактирования главной страницы школы: ' . $school->uri );
         return view('editmainpage', compact('user', 'role', 'school'));
     }
+
+    // редактирование урока в БД
+    public function editMainPagePOST(Request $request, $schoolUri)
+    {
+        $htmlContent = $request->html_content;
+        // dd($htmlContent);
+        try {
+            // проведём апдейт записи в таблице
+            DB::table('schools')
+                ->where('uri', '=', $schoolUri)
+                ->update(
+                    [
+                        'content' => $htmlContent,
+                    ]);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('session_error', 'При обновлении записи БД произошла ошибка' . (request('dev') ? PHP_EOL . $e->getMessage() : ''));
+        }
+
+        Logging::mylog('warning', 'Произвел редактирование главной страницы школы /' . $schoolUri);
+        return redirect('/' . $schoolUri)->with('message', 'Страница успешно отредактирована!');
+    }
+
+
+
+
 }

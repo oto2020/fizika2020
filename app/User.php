@@ -13,14 +13,14 @@ use Illuminate\Support\Facades\DB;
  */
 class User extends Authenticatable
 {
+    use Notifiable;
 
     // возвращает текущего пользователя
     public static function get() {
         return Auth::user();
     }
 
-    use Notifiable;
-
+    // --- ДАЛЬШЕ ИДУТ НАСТРОЙКИ Laravel относительно таблицы 'users' ---
     /**
      * The attributes that are mass assignable.
      *

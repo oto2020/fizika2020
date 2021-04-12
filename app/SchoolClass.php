@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class SchoolClass extends Model
 {
+    // Возвращает школьный класс по id
     public static function getById($schoolClassId)
     {
         try {

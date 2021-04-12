@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class Themes extends Model
 {
+    // Возвращает все записи из таблицы Разделов физики (Механика, Кинематика и тд.)
     public static function getAllThemes()
     {
         try {

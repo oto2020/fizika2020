@@ -23,6 +23,9 @@ Route::get('/logout', 'Auth\LoginController@logout');
 Route::get('/', function () {
     return redirect('/school0');
 });
+Route::get('/home', function () {
+    return redirect('/school0');
+});
 
 
 // Калькулятор
@@ -30,8 +33,10 @@ Route::get('/calc', 'CalcController@calcPage');
 
 // Главная страница школы
 Route::get('/{schoolUri}', 'SchoolController@showMainPage');
-// Редактирование html-содержимого на главной странице школы
+// Страница редактирование html-содержимого на главной странице школы
 Route::get('/{schoolUri}/edit_main_page', 'SchoolController@editMainPage');
+// Метод-обработчик редактирования главной страницы школы
+Route::post('/{schoolUri}/edit_main_page.php', 'SchoolController@editMainPagePOST');
 
 
 // страница с каким-либо разделом (Например: 7 класс)

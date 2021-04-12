@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class School extends Model
 {
+    // Возвращает школу по её id
     public static function getById($schoolId)
     {
         try {
@@ -20,6 +21,7 @@ class School extends Model
         return $school;
     }
 
+    // Возвращает школу по её uri
     public static function getByUri($schoolUri)
     {
         try {

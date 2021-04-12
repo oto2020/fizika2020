@@ -6,13 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
-class Logging extends Model
+class Logging
 {
     public static function mylog($level, $message)
     {
         if (Auth::check()) {
-            $user = Auth::user();
-            $role = UserRole::getByUserId($user->id);
+            $user = User::get();
+            $role = UserRole::getById($user->user_role_id);
             $school = School::getById($user->school_id);
             $class = SchoolClass::getById($user->school_class_id);
             $message =

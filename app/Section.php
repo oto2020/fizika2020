@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class Section extends Model
 {
+    // Возвращает разделы, принадлежащие школе по id школы
     public static function getSectionsBySchoolId($schoolId)
     {
         try {
@@ -20,6 +21,7 @@ class Section extends Model
         return $sections;
     }
 
+    // Возвращает раздел по id школы и uri раздела
     public static function getCurrentSection($schoolId, $sectionUri)
     {
         try {

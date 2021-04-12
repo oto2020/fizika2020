@@ -8,12 +8,14 @@ use Illuminate\Support\Facades\DB;
 
 class UserRole extends Model
 {
-    public static function getByUserId($userId)
+    // Возвращает роль пользователя по его id
+    public static function getById($roleId)
     {
+        $user = User::get();
         try {
             $role = DB::table('user_roles')
                 ->select('id', 'name', 'level', 'description')
-                ->where('id', '=', $userId)
+                ->where('id', '=', $roleId)
                 ->get()[0];
         } catch (\Exception $e) {
             Throw new \Exception('Ошибка при определении роли пользователя' . (request('dev') ? PHP_EOL . $e->getMessage() : ''));

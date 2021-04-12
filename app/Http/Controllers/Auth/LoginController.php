@@ -56,7 +56,7 @@ class LoginController extends Controller
 
             // получим пользователя, его роль и школу
             $user = User::get();
-            $role = $user!==null ? UserRole::getByUserId($user->id) : null;
+            $role = $user!==null ? UserRole::getById($user->user_role_id) : null;
             $school = School::getById($user->school_id);
 
             return redirect('/'.$school->uri.'/main/')->with('message', 'Школа ['.$school->name.']. Вы вошли в систему как ['.$role->name.']. '.$role->description);
