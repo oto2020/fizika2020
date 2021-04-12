@@ -31,12 +31,17 @@ Route::get('/home', function () {
 // Калькулятор
 Route::get('/calc', 'CalcController@calcPage');
 
+// добавление файла изображения
+Route::get('/img_upload', 'Controller@imgUploadPage');
+Route::post('/img_upload.php', 'Controller@imgUploadPOST');
+
 // Главная страница школы
 Route::get('/{schoolUri}', 'SchoolController@showMainPage');
 // Страница редактирование html-содержимого на главной странице школы
 Route::get('/{schoolUri}/edit_main_page', 'SchoolController@editMainPage');
 // Метод-обработчик редактирования главной страницы школы
 Route::post('/{schoolUri}/edit_main_page.php', 'SchoolController@editMainPagePOST');
+
 
 
 // страница с каким-либо разделом (Например: 7 класс)

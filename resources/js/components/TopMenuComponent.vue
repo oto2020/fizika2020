@@ -7,8 +7,8 @@
                 <li class="nav-item">
                     <a class="nav-link" v-bind:href="mainPageUri">Главная</a>
                 </li>
-                <li v-for="section in this.sections" class="nav-item">
-                    <a class="nav-link" v-bind:href="section.uri">{{section.name}}</a>
+                <li v-for="sect in this.sectionMenu" class="nav-item">
+                    <a class="nav-link" v-bind:href="sect.uri">{{sect.name}}</a>
                 </li>
             </ul>
 
@@ -18,7 +18,7 @@
 
                     <!--АВА ПОЛЬЗОВАТЕЛЯ-->
                     <div v-on:mouseenter="userMouseEnter" v-on:mouseleave="userMouseLeave" class="col-auto">
-                        <img v-bind:src="this.user.avatar_src" class="img-user-avatar-on-top-menu" alt="Аватар">
+                        <img v-bind:src="user.avatar_src" class="img-user-avatar-on-top-menu" alt="Аватар">
                     </div>
 
                     <!--ИМЯ ПОЛЬЗОВАТЕЛЯ + РОЛЬ-->
@@ -59,7 +59,7 @@
                 <!-- АВАТАР ПОЛЬЗОВАТЕЛЯ !-->
                 <div v-if="isAuth" class="col text-center">
                     <a href="/cabinet">
-                        <img v-bind:src="this.user.avatar_src" class="img-user-avatar-on-top-menu" alt="Аватар">
+                        <img v-bind:src="user.avatar_src" class="img-user-avatar-on-top-menu" alt="Аватар">
                     </a>
                 </div>
                 <!-- ВЫХОД -->
@@ -75,8 +75,8 @@
                     <li class="nav-item">
                         <a class="nav-link" v-bind:href="mainPageUri">Главная</a>
                     </li>
-                    <li v-for="section in this.sections" class="nav-item">
-                        <a class="nav-link" v-bind:href=section.uri>{{section.name}}</a>
+                    <li v-for="sect in this.sectionMenu" class="nav-item">
+                        <a class="nav-link" v-bind:href=sect.uri>{{sect.name}}</a>
                     </li>
                 </ul>
             </div>
@@ -102,7 +102,9 @@
                 // будет ли список отображаться (в мобильной версии)
                 isVisibleList: false,
                 // uri главной страницы той школы, к которой принадлежит пользователь
-                mainPageUri: this.school!==null ? '/' + this.school.uri + '/main' : 'school0/main',
+                mainPageUri: this.school!==null ? '/' + this.school.uri : '/school0',
+                // uri разделов в верхнем меню
+                sectionMenu: [],
             }
         },
         methods: {
@@ -127,6 +129,17 @@
             console.log('Top Menu mounted.');
             console.log('isAuth: ' + this.isAuth);
             console.log('isMobile: ' + this.isMobile);
+
+            // заполняем список пунктов верхнего меню
+            this.sectionMenu = [];
+            for (let index = 0; index <  this.sections.length; index++) {
+                this.sectionMenu.push(
+                    {
+                        name: this.sections[index].name,
+                        uri: '/' +this.school.uri + '/' + this.sections[index].uri
+                    }
+                );
+            }
         }
     }
 </script>

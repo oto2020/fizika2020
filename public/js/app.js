@@ -2391,7 +2391,9 @@ __webpack_require__.r(__webpack_exports__);
       // будет ли список отображаться (в мобильной версии)
       isVisibleList: false,
       // uri главной страницы той школы, к которой принадлежит пользователь
-      mainPageUri: this.school !== null ? '/' + this.school.uri + '/main' : 'school0/main'
+      mainPageUri: this.school !== null ? '/' + this.school.uri : '/school0',
+      // uri разделов в верхнем меню
+      sectionMenu: []
     };
   },
   methods: {
@@ -2413,7 +2415,16 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     console.log('Top Menu mounted.');
     console.log('isAuth: ' + this.isAuth);
-    console.log('isMobile: ' + this.isMobile);
+    console.log('isMobile: ' + this.isMobile); // заполняем список пунктов верхнего меню
+
+    this.sectionMenu = [];
+
+    for (var index = 0; index < this.sections.length; index++) {
+      this.sectionMenu.push({
+        name: this.sections[index].name,
+        uri: '/' + this.school.uri + '/' + this.sections[index].uri
+      });
+    }
   }
 });
 
@@ -38288,12 +38299,12 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
-                _vm._l(this.sections, function(section) {
+                _vm._l(this.sectionMenu, function(sect) {
                   return _c("li", { staticClass: "nav-item" }, [
                     _c(
                       "a",
-                      { staticClass: "nav-link", attrs: { href: section.uri } },
-                      [_vm._v(_vm._s(section.name))]
+                      { staticClass: "nav-link", attrs: { href: sect.uri } },
+                      [_vm._v(_vm._s(sect.name))]
                     )
                   ])
                 })
@@ -38316,7 +38327,7 @@ var render = function() {
                       [
                         _c("img", {
                           staticClass: "img-user-avatar-on-top-menu",
-                          attrs: { src: this.user.avatar_src, alt: "Аватар" }
+                          attrs: { src: _vm.user.avatar_src, alt: "Аватар" }
                         })
                       ]
                     ),
@@ -38426,7 +38437,7 @@ var render = function() {
                     _c("a", { attrs: { href: "/cabinet" } }, [
                       _c("img", {
                         staticClass: "img-user-avatar-on-top-menu",
-                        attrs: { src: this.user.avatar_src, alt: "Аватар" }
+                        attrs: { src: _vm.user.avatar_src, alt: "Аватар" }
                       })
                     ])
                   ])
@@ -38485,15 +38496,12 @@ var render = function() {
                     )
                   ]),
                   _vm._v(" "),
-                  _vm._l(this.sections, function(section) {
+                  _vm._l(this.sectionMenu, function(sect) {
                     return _c("li", { staticClass: "nav-item" }, [
                       _c(
                         "a",
-                        {
-                          staticClass: "nav-link",
-                          attrs: { href: section.uri }
-                        },
-                        [_vm._v(_vm._s(section.name))]
+                        { staticClass: "nav-link", attrs: { href: sect.uri } },
+                        [_vm._v(_vm._s(sect.name))]
                       )
                     ])
                   })

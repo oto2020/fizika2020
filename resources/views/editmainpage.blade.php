@@ -14,7 +14,7 @@
 
                     <div class="form-group col-12">
                         <b>HTML-содержимое:<br></b>
-                        <a href="/add_img" target="_blank">Добавить картинку</a>
+                        <a href="/img_upload" target="_blank">Добавить картинку</a>
                         <textarea name="html_content" id="html_content" class="form-control">{{$school->content}}</textarea>
 
                     </div>
