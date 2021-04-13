@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Lesson;
+use App\Logging;
 use App\School;
 use App\Section;
 use App\User;
@@ -16,7 +17,7 @@ class SectionController extends Controller
 
 
     // страница с каким-либо разделом (Например: 7-class)
-    public function showSectionPage($schoolUri, $sectionUri) // где section - это url раздела
+    public function showSectionPage($schoolUri, $sectionUri)
     {
         // получим пользователя, его роль и школу
         $user = User::get();
@@ -31,20 +32,8 @@ class SectionController extends Controller
 
         // Уроки текущего раздела
         $lessons = Lesson::getLessonsInfo($section->id);
-        dump($section->id);
-        dd($lessons);
-
-//        // Уроки текущего раздела
-//        $lessons = $this->getLessons($section->id);
-
-//        if ($sectionURL == 'main') {
-//            // КОНТЕНТ Главной страницы
-//            $lesson = $this->getLesson('glavnaya-stranica');
-//            $this->mylog('info', 'Зашел на Главную страницу');
-//            return view('mainpage', compact('sections', 'section', 'lessons', 'lesson', 'user', 'role'));
-//        }
-//        $this->mylog('info', 'Зашел на страницу раздела /' . $sectionURL);
-        return view('sectionpage', compact('sections', 'section', 'lessons', 'user', 'role'));
+        Logging::mylog('info', 'Зашел на страницу раздела /' . $schoolUri . '/' . $sectionUri);
+        return view('sectionpage', compact('user', 'role', 'school', 'sections', 'section', 'lessons'));
     }
 
 }

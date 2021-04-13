@@ -59,7 +59,7 @@ class LoginController extends Controller
             $role = $user!==null ? UserRole::getById($user->user_role_id) : null;
             $school = School::getById($user->school_id);
 
-            return redirect('/'.$school->uri.'/main/')->with('message', 'Школа ['.$school->name.']. Вы вошли в систему как ['.$role->name.']. '.$role->description);
+            return redirect('/'.$school->uri)->with('message', 'Школа ['.$school->name.']. Вы вошли в систему как ['.$role->name.']. '.$role->description);
         }
         Logging::mylog('warning', 'Неправильный логин или пароль при введённом email ' . $request->email);
         return redirect('/login')->with('session_error', 'Неправильный логин или пароль');

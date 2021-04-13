@@ -14,12 +14,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// --- АУТЕНТИФИКАЦИЯ И ЛОГАУТ ---
 Auth::routes();
-// Маршруты аутентификации...
 Route::post('/login', 'Auth\LoginController@login');
 Route::get('/logout', 'Auth\LoginController@logout');
 
-
+// --- ПЕРВЫЙ ВИЗИТ САЙТА ---
 Route::get('/', function () {
     return redirect('/school0');
 });
@@ -28,13 +28,14 @@ Route::get('/home', function () {
 });
 
 
-// Калькулятор
+// --- КАЛЬКУЛЯТОР ВЕЛИЧИН ---
 Route::get('/calc', 'CalcController@calcPage');
 
-// добавление файла изображения
+// --- ЗАГРУЗКА КАРТИНОК НА СЕРВЕР ---
 Route::get('/img_upload', 'Controller@imgUploadPage');
 Route::post('/img_upload.php', 'Controller@imgUploadPOST');
 
+// --- ГЛАВНАЯ СТРАНИЦА ШКОЛЫ ---
 // Главная страница школы
 Route::get('/{schoolUri}', 'SchoolController@showMainPage');
 // Страница редактирование html-содержимого на главной странице школы
@@ -42,10 +43,13 @@ Route::get('/{schoolUri}/edit_main_page', 'SchoolController@editMainPage');
 // Метод-обработчик редактирования главной страницы школы
 Route::post('/{schoolUri}/edit_main_page.php', 'SchoolController@editMainPagePOST');
 
-
-
+// --- СТРАНИЦЫ РАЗДЕЛОВ
 // страница с каким-либо разделом (Например: 7 класс)
 Route::get('/{schoolUri}/{sectionUri}', 'SectionController@showSectionPage');
+
+// --- СТРАНИЦЫ УРОКОВ
+// страница урокаю Пример: /school0/7-class/urok-po-mechanike
+Route::get('/{schoolUri}/{sectionUri}/{lessonUri}', 'LessonController@showLessonPage');
 
 //// страница с каким-нибудь уроком (Например: 7 класс/ урок 1)
 //Route::get('/{sectionURL}/{lessonURL}', 'HomeController@showLessonPage');

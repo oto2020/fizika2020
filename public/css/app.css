@@ -10989,3 +10989,82 @@ body {
   min-width: 200px;
 }
 
+/*Блок комментариев*/
+
+.img-sm {
+  width: 46px;
+  height: 46px;
+}
+
+.img-circle {
+  border-radius: 50px;
+}
+
+.media-block .media-left {
+  display: block;
+  float: left;
+}
+
+.media-block .media-right {
+  float: right;
+}
+
+.media-block .media-body {
+  display: block;
+  overflow: hidden;
+  width: auto;
+  margin-left: 60px;
+}
+
+.text-64pt {
+  font-size: 64pt;
+}
+
+.text-48pt {
+  font-size: 48pt;
+}
+
+.text-32pt {
+  font-size: 32pt;
+}
+
+.text-22pt {
+  font-size: 22pt;
+}
+
+.text-18pt {
+  font-size: 18pt;
+}
+
+.text-16pt {
+  font-size: 16pt;
+}
+
+.text-14pt {
+  font-size: 14pt;
+}
+
+.text-12pt {
+  font-size: 12pt;
+}
+
+.text-10pt {
+  font-size: 10pt;
+}
+
+.text-8pt {
+  font-size: 8pt;
+}
+
+.text-color-grey {
+  color: grey;
+}
+
+.text-color-blue {
+  color: blue;
+}
+
+.text-color-black {
+  color: black;
+}
+

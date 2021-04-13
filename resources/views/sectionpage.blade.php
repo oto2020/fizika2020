@@ -10,23 +10,35 @@
         <!-- КОНЕЦ ЛЕВОГО МЕНЮ!-->
 
         <!--Содержимое страницы!-->
-        <div class="col-xs-12 col-sm-10" style="padding-left: 25px;">
-            @if($section->url=='main')
-                На главной странице будет что-то другое, кроме списка уроков.
-            @elseif(count($lessons)==0)
+        <div class="col-xs-12 col-sm-10 pt-4" >
+            <?php// dd($lessons);?>
+            <h1>{{$section->name}}</h1>
+            @if(count($lessons)==0)
                 Уроки пока не добавлены.
             @else
                 <ul class="list-group list-group-flush">
                     @foreach($lessons as $l)
                         <li class="list-group-item">
-                            <p>
-                                <h2>{{$l->name}}</h2>
+                            <h2>{{$l->name}}</h2>
+{{--                            TODO:разработать страницу темы--}}
+                            <a class="alert-light" href="/themes/{{$l->themes_uri}}">
+                                <h5>
+                                    {{$l->themes_name}}
+                                </h5>
+                            </a>
+                            <h6>
+                                @if(isset($l->updated_at))
+                                    Дата обновления урока: {{explode(' ', $l->updated_at)[0]}}
+                                @else
+                                    Дата добавления урока: {{explode(' ', $l->created_at)[0]}}
+                                @endif
+                                | Автор урока: {{$l->author_name}}
+                            </h6>
 
-                                <h6>Дата добавления урока: {{$l->date}} | Автор урока: {{$l->user}}</h6>
-
-                                {{$l->preview_text}}
-                                <a class="nav-link" href="/{{$section->url}}/{{$l->url}}">Подробнее -></a>
-                            </p>
+                            {{$l->preview_text}}
+                            <a class="nav-link" href="/{{$school->uri}}/{{$section->uri}}/{{$l->uri}}">
+                                Подробнее ->
+                            </a>
                         </li>
                     @endforeach
                 </ul>

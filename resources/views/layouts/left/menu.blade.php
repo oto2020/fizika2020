@@ -1,52 +1,50 @@
 <div name="layouts.left.menu" style="min-width: 130px">
     <hr>
-    <!--Уроки!-->
+    <!--Уроки (для страницы раздела)!-->
     @if(count($lessons) == 0)
         Уроки пока не добавлены.
     @else
-        <?php $counter = 1;?>
         {{$section->name}}. Уроки:
         <nav class="navbar  navbar-light bg-light">
             <ul class="navbar-nav mr-auto">
-                @foreach($lessons as $l)
+                @foreach($lessons as $counter => $currentLesson)
                     <li class="nav-item active">
-                        <a class="nav-link" href="/{{$section->url}}/{{$l->url}}" >Урок {{$counter}}
-                            . {{$l->name}} </a>
+                        <a class="nav-link" href="/{{$school->uri}}/{{$section->uri}}/{{$currentLesson->uri}}">
+                            Урок {{$counter + 1}}. {{$currentLesson->name}}
+                        </a>
                     </li>
-                    <?php $counter++;?>
                 @endforeach
             </ul>
         </nav>
     @endif
-    @if ($role!==null && $role->name == 'Администратор')
-        <a href="/{{$section->url}}/add_lesson"> [добавить урок]</a>
+    @if ($user!==null && $role->level >= 60)
+        <a href="/{{$school->uri}}/{{$section->uri}}/add_lesson"> [добавить урок]</a>
     @endif
     <br>
-    <!-- Тесты !-->
+    <!-- Тесты (для страницы урока) !-->
     @if (isset($tests) && count($tests) > 0)
         <hr/>
-        <?php $counter = 1;?>
         Тесты по текущему уроку:
-        @if (($role!==null && ($role->name == 'Администратор' || $role->name == 'Ученик')))
+        @if (($user!==null && $role->level>=20))
             <nav class="navbar  navbar-light bg-light">
                 <ul class="navbar-nav mr-auto">
-                    @foreach($tests as $test)
+                    @foreach($tests as $counter => $test)
                         <li class="nav-item active">
                             <a class="nav-link"
-                               href="/{{$section->url}}/{{$lesson->url}}/{{$test->url}}">Тест {{$counter}}
-                                . {{$test->name}}</a>
+                               href="/{{$school->uri}}/{{$section->uri}}/{{$lesson->uri}}/{{$test->uri}}">
+                                Тест {{$counter + 1}}. {{$test->name}}
+                            </a>
                         </li>
-                        <?php $counter++;?>
                     @endforeach
                 </ul>
             </nav>
         @else
             <div class="alert alert-danger" role="alert">
-                Станьте учеником, чтобы проходить тесты
+                Зарегистрируйтесь, чтобы проходить тесты
             </div>
         @endif
     @endif
-    @if (isset($lesson) && $role!==null && $role->name == 'Администратор')
-        <a href="{{$lesson->full_url}}/add_test/">[добавить тест]</a>
+    @if (isset($lesson) && $user!==null && $role->level >= 60)
+        <a href="/{{$school->uri}}/{{$section->uri}}/{{$lesson->uri}}/add_test">[добавить тест]</a>
     @endif
 </div>
