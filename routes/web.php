@@ -40,16 +40,20 @@ Route::post('/img_upload.php', 'Controller@imgUploadPOST');
 Route::get('/{schoolUri}', 'SchoolController@showMainPage');
 // Страница редактирование html-содержимого на главной странице школы
 Route::get('/{schoolUri}/edit_main_page', 'SchoolController@editMainPage');
-// Метод-обработчик редактирования главной страницы школы
-Route::post('/{schoolUri}/edit_main_page.php', 'SchoolController@editMainPagePOST');
+// обработчик редактирования главной страницы школы
+Route::post('/edit_main_page.php', 'SchoolController@editMainPagePOST');
 
 // --- СТРАНИЦЫ РАЗДЕЛОВ
 // страница с каким-либо разделом (Например: 7 класс)
 Route::get('/{schoolUri}/{sectionUri}', 'SectionController@showSectionPage');
 
 // --- СТРАНИЦЫ УРОКОВ
-// страница урокаю Пример: /school0/7-class/urok-po-mechanike
+// страница урока, Пример: /school0/7-class/urok-po-mechanike
 Route::get('/{schoolUri}/{sectionUri}/{lessonUri}', 'LessonController@showLessonPage');
+// страница редактирования урока
+Route::get('/{schoolUri}/{sectionUri}/{lessonUri}/edit_lesson', 'LessonController@editLessonPage');
+// обработкчик по редактированию урока
+Route::post('/edit_lesson.php', 'LessonController@editLessonPOST');
 
 //// страница с каким-нибудь уроком (Например: 7 класс/ урок 1)
 //Route::get('/{sectionURL}/{lessonURL}', 'HomeController@showLessonPage');

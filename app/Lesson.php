@@ -48,9 +48,11 @@ class Lesson extends Model
                 ->select(
                     'sections.uri as section_uri',   // uri раздела (для построения полного пути к уроку)
                     'users.name as author_name',             // имя автора урока
+                    'themes.id as themes_id',                // id темы
                     'themes.name as themes_name',            // название темы
                     'themes.uri as themes_uri',              // uri темы
                     'lessons.id as id',                      // id урока
+                    'lessons.section_id as section_id',      // id раздела
                     'lessons.name as name',                  // название урока
                     'lessons.content as content',            // html КОНТЕНТ
                     'lessons.uri as uri',                    // uri урока (для построения полного пути к уроку)

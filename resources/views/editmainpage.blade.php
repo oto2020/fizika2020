@@ -8,9 +8,10 @@
         <!--Содержимое страницы по ДОБАВЛЕНИЮ СТАТЬИ!-->
         <div class="form-row">
             <div class="col-12">
-                <form method="post" action="/{{$school->uri}}/edit_main_page.php">
+                <form method="post" action="/edit_main_page.php">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
-
+                    <input type="hidden" name="school_id" value = "{{$school->id}}">
+                    <input type="hidden" name="back_url" value="{{url()->previous()}}">
 
                     <div class="form-group col-12">
                         <b>HTML-содержимое:<br></b>

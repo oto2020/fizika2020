@@ -6,6 +6,7 @@
         <div class="login-block">
             <form  method="post" action="/login">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                <input type="hidden" name="back_url" value="{{url()->current()}}">
                 <div class="form-group">
                     <span class="input-group-addon"></span>
                     <input name="email" type="text" class="form-control" placeholder="Ваш email" value="{{Session::get('login_email')}}">

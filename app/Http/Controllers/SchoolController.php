@@ -49,26 +49,32 @@ class SchoolController extends Controller
         return view('editmainpage', compact('user', 'role', 'school'));
     }
 
-    // редактирование урока в БД
-    public function editMainPagePOST(Request $request, $schoolUri)
+    // Редактирование (update) html-содержимого главной страницы школы
+    public function editMainPagePOST(Request $request)
     {
-        $htmlContent = $request->html_content;
+        $schoolId = $request->school_id;        // id школы, которой будем обновлять поле 'content'
+        $htmlContent = $request->html_content;  // контент, который будем заливать
+        $back_url = $request->back_url;         // url, на который редиректимся после апдейта
         // dd($htmlContent);
         try {
             // проведём апдейт записи в таблице
             DB::table('schools')
-                ->where('uri', '=', $schoolUri)
+                ->where('id', '=', $schoolId)
                 ->update(
                     [
                         'content' => $htmlContent,
                     ]);
         } catch (\Exception $e) {
+            // редирект на страницу редактирования
             return redirect()->back()->with('session_error', 'При обновлении записи БД произошла ошибка' . (request('dev') ? PHP_EOL . $e->getMessage() : ''));
         }
 
-        Logging::mylog('warning', 'Произвел редактирование главной страницы школы /' . $schoolUri);
-        return redirect('/' . $schoolUri)->with('message', 'Страница успешно отредактирована!');
+        Logging::mylog('warning', 'Редактирование главной страницы школы с id: ' . $schoolId);
+        // редирект на Главную страницу школы
+        return redirect($back_url)->with('message', 'Страница успешно отредактирована!');
     }
+
+
 
 
 
