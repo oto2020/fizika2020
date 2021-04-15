@@ -3,6 +3,7 @@
     <!--Уроки (для страницы раздела)!-->
     @if(count($lessons) == 0)
         Уроки пока не добавлены.
+        <br>
     @else
         {{$section->name}}. Уроки:
         <nav class="navbar  navbar-light bg-light">
@@ -18,7 +19,7 @@
         </nav>
     @endif
     @if ($user!==null && $role->level >= 60)
-        <a href="/{{$school->uri}}/{{$section->uri}}/add_lesson"> [добавить урок]</a>
+        <a href="/{{$school->uri}}/{{$section->uri}}/add_lesson">[добавить урок]</a>
     @endif
     <br>
     <!-- Тесты (для страницы урока) !-->

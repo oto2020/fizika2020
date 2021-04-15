@@ -16,7 +16,7 @@ class SchoolClass extends Model
                 ->where('id', '=', $schoolClassId)
                 ->get()[0];
         } catch (\Exception $e) {
-            Throw new \Exception('Ошибка при определении школьного класса по id' . (request('dev') ? PHP_EOL . $e->getMessage() : ''));
+            Throw new \Exception('Ошибка при определении школьного класса по id: ' . PHP_EOL . $e->getMessage());
         }
         return $school;
     }

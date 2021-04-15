@@ -38,16 +38,6 @@
     </form>
 </div>
 
-<!-- КОНЕЦ Содержимого страницы!-->
-
-<!-- СКРИПТ ПО АВТООБНОВЛЕНИЮ HTML-КОНТЕНТА!-->
-<script>
-    // получим ссылки на поля textarea
-    let htmlContent = document.getElementById("html_content");
-    let htmlContentView = document.getElementById("html_content_view");
-    htmlContent.onkeyup = function(e){htmlContentView.innerHTML = htmlContent.value;};
-</script>
-<!-- КОНЕЦ СКРИПТ ПО АВТООБНОВЛЕНИЮ HTML-КОНТЕНТА!-->
 
 
 <br>

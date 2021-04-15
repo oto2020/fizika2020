@@ -16,7 +16,7 @@ class School extends Model
                 ->where('id', '=', $schoolId)
                 ->get()[0];
         } catch (\Exception $e) {
-            Throw new \Exception('Ошибка при определении школы по id' . (request('dev') ? PHP_EOL . $e->getMessage() : ''));
+            Throw new \Exception('Ошибка при определении школы по id: ' . PHP_EOL . $e->getMessage());
         }
         return $school;
     }
@@ -30,8 +30,23 @@ class School extends Model
                 ->where('uri', '=', $schoolUri)
                 ->get()[0];
         } catch (\Exception $e) {
-            Throw new \Exception('Ошибка при определении школы по uri' . (request('dev') ? PHP_EOL . $e->getMessage() : ''));
+            Throw new \Exception('Ошибка при определении школы по uri: ' . PHP_EOL . $e->getMessage());
         }
         return $school;
     }
+    // Обновляет контент главной страницы школы
+    public static function updateContent ($schoolId, $htmlContent) {
+        try {
+            // проведём апдейт записи в таблице
+            DB::table('schools')
+                ->where('schoolId', '=', $schoolId)
+                ->update(
+                    [
+                        'content' => $htmlContent,
+                    ]);
+        } catch (\Exception $e) {
+            Throw new \Exception('Ошибка при обновлении контента главной страницы школы: ' . PHP_EOL . $e->getMessage());
+        }
+    }
+
 }

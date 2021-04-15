@@ -81,29 +81,31 @@ class LessonController extends Controller
     // Редактирование (update) html-содержимого урока
     public function editLessonPOST(Request $request)
     {
-        //TODO: сделать проверку uri на уникальность в рамках всех уроков ЭТОГО раздела
-        //TODO: менять back_url, ведь если изменится uri урока, то back_url остается прежним и это приведет к 404
         // dd($request->all());
         try {
-            // проведём апдейт записи в таблице
-            DB::table('lessons')
-                ->where('id', '=', $request->lesson_id)
-                ->update(
-                    [
-                        'name' => $request->lesson_name,
-                        'uri' => $request->lesson_uri,
-                        'section_id' => $request->section_id,
-                        'themes_id' => $request->themes_id,
-                        'preview_text' => $request->lesson_preview_text,
-                        'content' => $request->lesson_content
-                    ]);
-        } catch (\Exception $e) {
-            // редирект на страницу редактирования
-            return redirect()->back()->with('session_error', 'При обновлении записи БД произошла ошибка' . (request('dev') ? PHP_EOL . $e->getMessage() : ''));
-        }
+            // Узнаем, не занят ли uri в разделе. (Примечание: uri могут совпадать в разных разделах, однако в рамках одного раздела они должны различаться)
+            Lesson::notFreeUriException($request->lesson_uri, $request->section_id);
 
+            // Обновим урок и его контент
+            Lesson::updateLesson(
+                $request->lesson_id,
+                $request->lesson_name,
+                $request->lesson_uri,
+                $request->section_id,
+                $request->themes_id,
+                $request->lesson_preview_text,
+                $request->lesson_content
+            );
+            // Получим полный путь к уроку (путь к уроку мог измениться(uri урока или id раздела))
+            $back_uri = Lesson::getFullUri($request->lesson_id);
+        }
+        catch (\Exception $e)
+        {
+            return redirect()->back()->with('session_error', $e->getMessage());
+        }
+        // Логгирование
         Logging::mylog('warning', 'Редактирование урока "'.$request->lesson_name.'" с id: ' . $request->lesson_id);
-        // редирект на Главную страницу школы
-        return redirect($request->back_url)->with('message', 'Страница успешно отредактирована!');
+        // редирект на обновленную страницу урока
+        return redirect($back_uri)->with('message', 'Страница успешно отредактирована!');
     }
 }

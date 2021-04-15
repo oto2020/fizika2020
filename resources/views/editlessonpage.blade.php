@@ -10,7 +10,6 @@
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <input type="hidden" name="user" value="{{$user->name}}">
                 <input type="hidden" name="lesson_id" value="{{$lesson->id}}">
-                <input type="hidden" name="back_url" value="{{url()->previous()}}">
                 <div class="col-xl-6">
                     <div class="form-group">
                         <b>Название урока:</b>

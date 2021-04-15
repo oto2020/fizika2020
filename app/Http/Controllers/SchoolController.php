@@ -56,18 +56,9 @@ class SchoolController extends Controller
         $htmlContent = $request->html_content;  // контент, который будем заливать
         $back_url = $request->back_url;         // url, на который редиректимся после апдейта
         // dd($htmlContent);
-        try {
-            // проведём апдейт записи в таблице
-            DB::table('schools')
-                ->where('id', '=', $schoolId)
-                ->update(
-                    [
-                        'content' => $htmlContent,
-                    ]);
-        } catch (\Exception $e) {
-            // редирект на страницу редактирования
-            return redirect()->back()->with('session_error', 'При обновлении записи БД произошла ошибка' . (request('dev') ? PHP_EOL . $e->getMessage() : ''));
-        }
+
+        // Обновляем контент Главной страницы школы с id равным $schoolId
+        School::updateContent($schoolId, $htmlContent);
 
         Logging::mylog('warning', 'Редактирование главной страницы школы с id: ' . $schoolId);
         // редирект на Главную страницу школы

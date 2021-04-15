@@ -17,7 +17,7 @@ class Test extends Model
                 ->where('lesson_id', '=', $lessonId)
                 ->get();
         } catch (\Exception $e) {
-            Throw new \Exception('Ошибка при получении тестов по id урока' . (request('dev') ? PHP_EOL . $e->getMessage() : ''));
+            Throw new \Exception('Ошибка при получении тестов по id урока: ' . PHP_EOL . $e->getMessage());
         }
         return $sections;
     }

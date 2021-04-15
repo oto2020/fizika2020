@@ -15,7 +15,7 @@ class Themes extends Model
                 ->select('*')
                 ->get();
         } catch (\Exception $e) {
-            Throw new \Exception('Ошибка при получении Разделов физики' . (request('dev') ? PHP_EOL . $e->getMessage() : ''));
+            Throw new \Exception('Ошибка при получении Разделов физики (тематик): ' . PHP_EOL . $e->getMessage());
         }
         return $themes;
     }
