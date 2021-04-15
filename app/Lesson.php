@@ -113,7 +113,7 @@ class Lesson extends Model
         {
             if ($lesson->uri == $checkedLessonUri) {
                 // найдено совпадение -- генерируем исключение
-                Throw new \Exception ('Uri урока "' . $checkedLessonUri . '" уже занят в выбранном разделе "'.
+                Throw new \Exception ('"' . $checkedLessonUri . '" уже занят в выбранном разделе "'.
                     $lesson->section_name.'". Задайте другой uri для этого урока.');
             }
         }
