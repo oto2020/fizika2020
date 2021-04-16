@@ -91,13 +91,13 @@ class Lesson extends Model
     }
 
     // определяет, не занят ли uri в разделе. (Примечание: uri могут совпадать в разных разделах, однако в рамках одного раздела они должны различаться)
-    public static function notFreeUriException ($checkedLessonUri, $sectionId) {
+    public static function notFreeUriException ($thisLessonId, $checkedLessonUri, $sectionId) {
         // Получим uri всех уроков, относящих себя к разделу с $sectionId
         try {
             $lessons = DB::table('lessons')
                 ->join('sections', 'lessons.section_id', '=', 'sections.id')
                 ->select(
-                    'lessons.id as lesson_id',
+                    'lessons.id as id',
                     'lessons.uri as uri',
                     'lessons.name as name',
                     'sections.name as section_name'
@@ -107,13 +107,16 @@ class Lesson extends Model
         } catch (\Exception $e) {
             Throw new \Exception('Ошибка при определении свободности для uri урока в разделе с id: ' .$sectionId . ' ' . PHP_EOL . $e->getMessage());
         }
-        // изначально считаем, что uri свободно
-        $isFree = true;
+
         foreach ($lessons as $lesson)
         {
+            // текущий урок не проверяем
+            if ($lesson->id == $thisLessonId) continue;
+
+            // если uri совпадет с проверяемым
             if ($lesson->uri == $checkedLessonUri) {
                 // найдено совпадение -- генерируем исключение
-                Throw new \Exception ('"' . $checkedLessonUri . '" уже занят в выбранном разделе "'.
+                Throw new \Exception ('"' . $checkedLessonUri . '" уже занят в "'.
                     $lesson->section_name.'". Задайте другой uri для этого урока.');
             }
         }
@@ -134,7 +137,8 @@ class Lesson extends Model
                         'themes_id' => $themes_id,
                         'author_id' => $author_id,
                         'preview_text' => $preview_text,
-                        'content' => $content
+                        'content' => $content,
+                        'created_at' => now()
                     ]);
         } catch (\Exception $e) {
             Throw new \Exception('Ошибка при добавлении урока: ' . PHP_EOL . $e->getMessage());
@@ -154,7 +158,8 @@ class Lesson extends Model
                         'section_id' => $section_id,
                         'themes_id' => $themes_id,
                         'preview_text' => $preview_text,
-                        'content' => $content
+                        'content' => $content,
+                        'updated_at' => now()
                     ]);
         } catch (\Exception $e) {
             Throw new \Exception('Ошибка при обновлении страницы урока: ' . PHP_EOL . $e->getMessage());

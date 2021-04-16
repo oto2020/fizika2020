@@ -14,6 +14,8 @@ use App\User;
 use App\UserRole;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 
 class LessonController extends Controller
 {
@@ -58,6 +60,8 @@ class LessonController extends Controller
         // получим пользователя, его роль и школу
         $user = User::get();
         $role = $user !== null ? UserRole::getById($user->user_role_id) : null;
+        if (!($user !== null && $role->level >= 60))
+            dd('У вас нет полномочий редактировать уроки.');
         $school = School::getByUri($schoolUri);
 
         // ДЛЯ ВЕРХНЕГО МЕНЮ -- СПИСОК РАЗДЕЛОВ (ГЛАВНАЯ, 7 КЛАСС, 8 КЛАСС И ТД,)
@@ -83,9 +87,15 @@ class LessonController extends Controller
     public function editLessonPOST(Request $request)
     {
         // dd($request->all());
+
+        // Запишем в сессию все поля, чтобы не потерять их.
+        // И при ошибке вернуть пользователя обратно к редактированию урока с СОХРАНЕНИЕМ его трудов по заполнению полей
+        $request->session()->forget('old');
+        $request->session()->put('old', $request->all());
+
         try {
             // Узнаем, не занят ли uri в разделе. (Примечание: uri могут совпадать в разных разделах, однако в рамках одного раздела они должны различаться)
-            Lesson::notFreeUriException($request->lesson_uri, $request->section_id);
+            Lesson::notFreeUriException($request->lesson_id, $request->lesson_uri, $request->section_id);
 
             // Обновим урок и его контент
             Lesson::updateLesson(
@@ -115,6 +125,8 @@ class LessonController extends Controller
         // получим пользователя, его роль и школу
         $user = User::get();
         $role = $user !== null ? UserRole::getById($user->user_role_id) : null;
+        if (!($user !== null && $role->level >= 60))
+            dd('У вас нет полномочий редактировать уроки.');
         $school = School::getByUri($schoolUri);
 
         // ДЛЯ ВЕРХНЕГО МЕНЮ -- СПИСОК РАЗДЕЛОВ (ГЛАВНАЯ, 7 КЛАСС, 8 КЛАСС И ТД,)
@@ -136,9 +148,14 @@ class LessonController extends Controller
     public function addLessonPOST(Request $request)
     {
         // dd($request->all());
+
+        // Запишем в сессию все поля, чтобы не потерять их.
+        // И при ошибке вернуть пользователя обратно к редактированию урока с СОХРАНЕНИЕМ его трудов по заполнению полей
+        $request->session()->forget('old');
+        $request->session()->put('old', $request->all());
         try {
             // Узнаем, не занят ли uri в разделе. (Примечание: uri могут совпадать в разных разделах, однако в рамках одного раздела они должны различаться)
-            Lesson::notFreeUriException($request->lesson_uri, $request->section_id);
+            Lesson::notFreeUriException(0, $request->lesson_uri, $request->section_id);
 
             // Добавим урок и получим его id
             $lessonId = Lesson::addLessonGetId(
