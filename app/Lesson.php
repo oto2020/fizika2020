@@ -120,6 +120,27 @@ class Lesson extends Model
         // если дошли сюда, значит всё ок, исключение не вылетело
     }
 
+    // Добавляет новый урок и возвращает его id
+    public static function addLessonGetId($name, $uri, $section_id, $themes_id, $author_id, $preview_text, $content) {
+
+        try {
+            // добавим новую запись в таблицу
+            return DB::table('lessons')
+                ->insertGetId(
+                    [
+                        'name' => $name,
+                        'uri' => $uri,
+                        'section_id' => $section_id,
+                        'themes_id' => $themes_id,
+                        'author_id' => $author_id,
+                        'preview_text' => $preview_text,
+                        'content' => $content
+                    ]);
+        } catch (\Exception $e) {
+            Throw new \Exception('Ошибка при добавлении урока: ' . PHP_EOL . $e->getMessage());
+        }
+    }
+
     // Обновляет урок
     public static function updateLesson($lesson_id, $name, $uri, $section_id, $themes_id, $preview_text, $content) {
         try {

@@ -86,7 +86,7 @@
     CKEDITOR.replace( 'html_content', {height: 600});
 </script>
 <!-- СКРИПТ ПО ТРАНСЛИТУ!-->
-<script src='/js/transliterURL.js'></script>;
+<script src='/js/transliterURL.js'></script>
 <!-- КОНЕЦ СКРИПТ ПО ТРАНСЛИТУ!-->
 </body>
 </html>

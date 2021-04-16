@@ -48,12 +48,19 @@ Route::post('/edit_main_page.php', 'SchoolController@editMainPagePOST');
 Route::get('/{schoolUri}/{sectionUri}', 'SectionController@showSectionPage');
 
 // --- СТРАНИЦЫ УРОКОВ
-// страница урока, Пример: /school0/7-class/urok-po-mechanike
-Route::get('/{schoolUri}/{sectionUri}/{lessonUri}', 'LessonController@showLessonPage');
+// Страница добавления урока
+Route::get('/{schoolUri}/{sectionUri}/add_lesson', 'LessonController@addLessonPage');
+// обработчик по добавлению урока
+Route::post('/add_lesson.php', 'LessonController@addLessonPOST');
+
 // страница редактирования урока
 Route::get('/{schoolUri}/{sectionUri}/{lessonUri}/edit_lesson', 'LessonController@editLessonPage');
-// обработкчик по редактированию урока
+// обработчик по редактированию урока
 Route::post('/edit_lesson.php', 'LessonController@editLessonPOST');
+
+// страница урока, Пример: /school0/7-class/urok-po-mechanike
+Route::get('/{schoolUri}/{sectionUri}/{lessonUri}', 'LessonController@showLessonPage');
+
 
 //// страница с каким-нибудь уроком (Например: 7 класс/ урок 1)
 //Route::get('/{sectionURL}/{lessonURL}', 'HomeController@showLessonPage');

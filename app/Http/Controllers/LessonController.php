@@ -23,7 +23,7 @@ class LessonController extends Controller
     {
         // получим пользователя, его роль и школу
         $user = User::get();
-        $role = $user!==null ? UserRole::getById($user->user_role_id) : null;
+        $role = $user !== null ? UserRole::getById($user->user_role_id) : null;
         $school = School::getByUri($schoolUri);
 
         // ДЛЯ ВЕРХНЕГО МЕНЮ -- СПИСОК РАЗДЕЛОВ (ГЛАВНАЯ, 7 КЛАСС, 8 КЛАСС И ТД,)
@@ -53,10 +53,11 @@ class LessonController extends Controller
     }
 
     // Страница редактирования урока
-    public function editLessonPage($schoolUri, $sectionUri, $lessonUri) {
+    public function editLessonPage($schoolUri, $sectionUri, $lessonUri)
+    {
         // получим пользователя, его роль и школу
         $user = User::get();
-        $role = $user!==null ? UserRole::getById($user->user_role_id) : null;
+        $role = $user !== null ? UserRole::getById($user->user_role_id) : null;
         $school = School::getByUri($schoolUri);
 
         // ДЛЯ ВЕРХНЕГО МЕНЮ -- СПИСОК РАЗДЕЛОВ (ГЛАВНАЯ, 7 КЛАСС, 8 КЛАСС И ТД,)
@@ -78,7 +79,7 @@ class LessonController extends Controller
         return view('editlessonpage', compact('user', 'role', 'school', 'sections', 'section', 'lesson', 'themes'));
     }
 
-    // Редактирование (update) html-содержимого урока
+    // Редактирование (update) урока
     public function editLessonPOST(Request $request)
     {
         // dd($request->all());
@@ -98,14 +99,66 @@ class LessonController extends Controller
             );
             // Получим полный путь к уроку (путь к уроку мог измениться(uri урока или id раздела))
             $back_uri = Lesson::getFullUri($request->lesson_id);
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             return redirect()->back()->with('session_error', $e->getMessage());
         }
         // Логгирование
-        Logging::mylog('warning', 'Редактирование урока "'.$request->lesson_name.'" с id: ' . $request->lesson_id);
+        Logging::mylog('warning', 'Редактирование урока "' . $request->lesson_name . '" с id: ' . $request->lesson_id);
         // редирект на обновленную страницу урока
         return redirect($back_uri)->with('message', 'Страница успешно отредактирована!');
     }
+
+    // Добавление урока
+    // Редактирование (update) html-содержимого урока
+    public function addLessonPage($schoolUri, $sectionUri)
+    {
+        // получим пользователя, его роль и школу
+        $user = User::get();
+        $role = $user !== null ? UserRole::getById($user->user_role_id) : null;
+        $school = School::getByUri($schoolUri);
+
+        // ДЛЯ ВЕРХНЕГО МЕНЮ -- СПИСОК РАЗДЕЛОВ (ГЛАВНАЯ, 7 КЛАСС, 8 КЛАСС И ТД,)
+        $sections = Section::getSectionsBySchoolId($school->id);
+
+        // Текущий раздел по id школы и uri раздела
+        $section = Section::getCurrentSection($school->id, $sectionUri);
+
+        // Что можно изменить у урока помимо самого контента и других полей урока...?
+        // Изменить раздел, к которому привязан урок -- уже есть section
+        // Изменить тему, к которой относится урок
+        $themes = Themes::getAllThemes();
+        // Изменить автора -- Останется прежний
+
+        return view('addlessonpage', compact('user', 'role', 'school', 'sections', 'section', 'themes'));
+    }
+
+    // Добавление (insert) урока
+    public function addLessonPOST(Request $request)
+    {
+        // dd($request->all());
+        try {
+            // Узнаем, не занят ли uri в разделе. (Примечание: uri могут совпадать в разных разделах, однако в рамках одного раздела они должны различаться)
+            Lesson::notFreeUriException($request->lesson_uri, $request->section_id);
+
+            // Добавим урок и получим его id
+            $lessonId = Lesson::addLessonGetId(
+                $request->lesson_name,
+                $request->lesson_uri,
+                $request->section_id,
+                $request->themes_id,
+                $request->author_id,
+                $request->lesson_preview_text,
+                $request->lesson_content
+            );
+            // Получим полный путь к уроку (путь к уроку мог измениться(uri урока или id раздела))
+            $back_uri = Lesson::getFullUri($lessonId);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('session_error', $e->getMessage());
+        }
+        // Логгирование
+        Logging::mylog('warning', 'Редактирование урока "' . $request->lesson_name . '" с id: ' . $request->lesson_id);
+        // редирект на обновленную страницу урока
+        return redirect($back_uri)->with('message', 'Страница успешно добавлена!');
+    }
+
 }
