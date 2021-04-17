@@ -16,6 +16,12 @@
                     <span class="input-group-addon"></span>
                     <input name="password" type="password" class="form-control" placeholder="Ваш суперпароль">
                 </div>
+                <div class="form-check pb-1">
+                    <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+                    <label class="form-check-label" for="remember">
+                        Запомнить меня
+                    </label>
+                </div>
                 <button class="btn btn-secondary btn-block" type="submit">ВОЙТИ</button>
             </form>
             <div class="login-links">
