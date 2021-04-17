@@ -25,6 +25,11 @@ class RegisterController extends Controller
 
     use RegistersUsers;
 
+    public function showRegistrationForm()
+    {
+        dd("Решиши поглядеть на страницу регистрации?");
+        return view('auth.register');
+    }
     /**
      * Where to redirect users after registration.
      *
