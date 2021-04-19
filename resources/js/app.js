@@ -7,9 +7,12 @@
 require('./bootstrap');
 
 import VueMobileDetection from "vue-mobile-detection";
+import axios from 'axios'
+import VueAxios from 'vue-axios'
 
 window.Vue = require('vue');
 Vue.use(VueMobileDetection);
+Vue.use(VueAxios, axios);
 
 
 /**
@@ -26,6 +29,7 @@ Vue.use(VueMobileDetection);
 Vue.component('example_component', require('./components/ExampleComponent.vue').default);
 Vue.component('top_menu', require('./components/TopMenuComponent.vue').default);
 Vue.component('units_calc', require('./components/CalcComponent.vue').default);
+Vue.component('test_ajax', require('./components/TestAjaxComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Logging;
+use App\School;
+use App\SchoolClass;
+use App\Section;
 use App\User;
+use App\UserRole;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -73,26 +77,4 @@ class Controller extends BaseController
 }
 
 
-//// отобразим сообщение об успешной загрузке файла
-//echo '<hr>Файл ' . $i . ' [' . $futureFileName . '] успешно загружен!<br>';
-////echo htmlspecialchars('<img src="/storage/img/' . $futureFileName . '" class="img-fluid" alt="Картинка не найдена">');
-//echo '<br><div id="img_' . $i . '"><img src="/storage/img/' . $futureFileName . '" class="img-fluid" width="150px" alt="Картинка не найдена"></div><br>';
-////                    echo '<textarea rows="2" cols="97" id="cont_' . $i . '"></textarea>';
-////                    echo '<script>document.getElementById("cont_' . $i . '").value = document.getElementById("img_'.$i.'").innerHTML;</script>';
-////echo '<br>Скопируйте ссылку и добавьте изображение с помощью соответсвующей кнопки в CKEditor.';
-//echo '<br>Ссылка на файл:<br>';
-//echo '<textarea rows="2" cols="97" id="cont_' . $i . '">';
-//echo '/storage/img/' . $futureFileName;
-//echo '</textarea><br>';
-//echo '<button onclick="copyToClipBoard_' . $i . '()">Копировать в буфер обмена</button>';
-//
-//// подключаем обработчик по клику на кнопку "Копировать в буфер обмена"
-//echo '
-//                    <script>
-//                        function copyToClipBoard_' . $i . '() {
-//                            let copyText = document.getElementById(\'cont_' . $i . '\');
-//                            copyText.select();
-//                            document.execCommand("copy");
-//                            alert("Скопирована ссылка: " + copyText.value + "\n\nИспользуйте её как url при размещении изображения на сайте.");
-//                        }
-//                    </script>';
+

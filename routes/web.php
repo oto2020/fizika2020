@@ -14,6 +14,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Тестовая страница
+Route::get('/test', 'Tests\TestController@testPage');
+Route::post('/test_post_ajax.php', 'Tests\TestController@testAjaxPost');
+
 // --- АУТЕНТИФИКАЦИЯ И ЛОГАУТ ---
 Auth::routes();
 Route::post('/login', 'Auth\LoginController@login');
