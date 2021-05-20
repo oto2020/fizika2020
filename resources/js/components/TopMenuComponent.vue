@@ -17,12 +17,12 @@
                 <div class="row p-0">
 
                     <!--АВА ПОЛЬЗОВАТЕЛЯ-->
-                    <div v-on:mouseenter="userMouseEnter" v-on:mouseleave="userMouseLeave" class="col-auto">
+                    <div @click="hrefCabinet" v-on:mouseenter="userMouseEnter" v-on:mouseleave="userMouseLeave" class="col-auto">
                         <img v-bind:src="user.avatar_src" class="img-user-avatar-on-top-menu" alt="Аватар">
                     </div>
 
                     <!--ИМЯ ПОЛЬЗОВАТЕЛЯ + РОЛЬ-->
-                    <div v-on:mouseenter="userMouseEnter" v-on:mouseleave="userMouseLeave" class="col-auto text-white pl-0">
+                    <div @click="hrefCabinet" v-on:mouseenter="userMouseEnter" v-on:mouseleave="userMouseLeave" class="col-auto text-white pl-0">
                         <h5> {{user.name}} </h5>
                         <h6 v-html="underText"></h6>
                     </div>
@@ -123,6 +123,10 @@
             logoutMouseLeave() {
                 this.logoutButtonSrc= '/storage/img/main/exit_button.png';
             },
+
+            hrefCabinet() {
+                window.location.href = 'cabinet';
+            }
         },
 
         mounted() {

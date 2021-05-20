@@ -2410,6 +2410,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     logoutMouseLeave: function logoutMouseLeave() {
       this.logoutButtonSrc = '/storage/img/main/exit_button.png';
+    },
+    hrefCabinet: function hrefCabinet() {
+      window.location.href = 'cabinet';
     }
   },
   mounted: function mounted() {
@@ -38320,6 +38323,7 @@ var render = function() {
                       {
                         staticClass: "col-auto",
                         on: {
+                          click: _vm.hrefCabinet,
                           mouseenter: _vm.userMouseEnter,
                           mouseleave: _vm.userMouseLeave
                         }
@@ -38337,6 +38341,7 @@ var render = function() {
                       {
                         staticClass: "col-auto text-white pl-0",
                         on: {
+                          click: _vm.hrefCabinet,
                           mouseenter: _vm.userMouseEnter,
                           mouseleave: _vm.userMouseLeave
                         }

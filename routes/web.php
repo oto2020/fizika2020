@@ -27,6 +27,8 @@ Route::get('/home', function () {
     return redirect('/school0');
 });
 
+// --- ЛИЧНЫЙ КАБИНЕТ ---
+Route::get('/cabinet', 'CabinetController@show')->name('cabinet');
 
 // --- КАЛЬКУЛЯТОР ВЕЛИЧИН ---
 Route::get('/calc', 'CalcController@calcPage');

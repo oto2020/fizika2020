@@ -67,6 +67,7 @@
             login-route="{{route('login')}}"
             register-route="{{route('register')}}"
             logout-route="{{route('logout')}}"
+            cabinet-route="{{route('cabinet')}}"
         ></top_menu>
 
         <main>
